@@ -1,7 +1,7 @@
 {
   "framework": null,
   "installCommand": "npm install",
-  "buildCommand": "npx hexo generate",
-  "devCommand": "npx hexo server",
+  "buildCommand": "node node_modules/hexo-cli/bin/hexo generate",
+  "devCommand": "node node_modules/hexo-cli/bin/hexo server",
   "outputDirectory": "public"
 }
