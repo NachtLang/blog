@@ -1,0 +1,5 @@
+{
+  "build_command": "npx hexo generate",
+  "dev_command": "npx hexo server",
+  "install_command": "npm install"
+}
