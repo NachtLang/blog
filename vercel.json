@@ -1,5 +1,7 @@
 {
-  "build_command": "npx hexo generate",
-  "dev_command": "npx hexo server",
-  "install_command": "npm install"
+  "framework": null,
+  "installCommand": "npm install",
+  "buildCommand": "npx hexo generate",
+  "devCommand": "npx hexo server",
+  "outputDirectory": "public"
 }
