@@ -18,7 +18,7 @@ toc:
 # Profile (shown on homepage above post list)
 profile:
   avatar: /images/logo.svg
-  description: "一个安静的个人博客"
+  description: "请赐我平静的心去接受我无法改变的，请赐我勇敢的心去改变我能够改变的，请赐我智慧的心去辨别它们。"
   links:
     - name: GitHub
       url: https://github.com/NachtLang
