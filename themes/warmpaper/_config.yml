@@ -1,0 +1,34 @@
+# Warmpaper Theme Configuration
+
+# Navigation menu
+menu:
+  Home: /
+  Archives: /archives
+  Tags: /tags
+  Categories: /categories
+  About: /about
+
+# Table of Contents (right sidebar on post pages)
+toc:
+  enable: true
+  max_depth: 3
+  min_depth: 2
+  list_number: false
+
+# Profile (shown on homepage above post list)
+profile:
+  avatar: /images/logo.svg
+  description: "一个安静的个人博客"
+  links:
+    - name: GitHub
+      url: https://github.com/NachtLang
+      icon: github
+    - name: Website
+      url: https://www.stayawake.top
+      icon: website
+
+# Post excerpt
+excerpt_link: 阅读全文
+
+# Footer
+copyright: "© AwaKeSpace"
