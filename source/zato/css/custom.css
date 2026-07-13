@@ -471,22 +471,29 @@ html.font-xl { font-size: 20px; }
   article .min-h-36 {
     min-height: 8rem !important;
   }
-  /* pt-8 → 3.25rem：确保标签与文字间足够间距 */
+  /* 标签改为自然流布局后，还原顶部内边距 */
   article .pt-8 {
-    padding-top: 3.25rem !important;
+    padding-top: 0.75rem !important;
   }
   article .p-4 {
     padding: 0.75rem !important;
   }
-  /* 角色标签 — 彻底上移 + 不换行 + 不透明白底 */
+  /* 角色标签 — 移动端改为自然流布局，作为文字上方标题，彻底消除重叠 */
   article .-top-2 {
-    top: -1rem !important;
+    position: static !important;
+    display: block;
+    margin: 0 0.5rem 0.25rem 0.5rem;
+    padding: 0.15rem 0.5rem;
     font-size: 0.8rem;
+    font-weight: 600;
     white-space: nowrap;
-    max-width: calc(100% - 1.25rem);
+    max-width: calc(100% - 1rem);
     overflow: hidden;
     text-overflow: ellipsis;
-    background-color: #1a1a1a !important;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent !important;
+    color: #c9a96e;
   }
 
   /* 立绘 — 增大尺寸 */
@@ -627,22 +634,29 @@ html.font-xl { font-size: 20px; }
   article .min-h-36 {
     min-height: 7rem !important;
   }
-  /* pt-8 → 3.25rem：确保标签与文字间足够间距 */
+  /* 标签改为自然流布局后，还原顶部内边距 */
   article .pt-8 {
-    padding-top: 3.25rem !important;
+    padding-top: 0.6rem !important;
   }
   article .p-4 {
     padding: 0.6rem !important;
   }
-  /* 角色标签 — 彻底上移 + 不换行 + 不透明白底 */
+  /* 角色标签 — 小屏自然流布局，作为文字上方标题 */
   article .-top-2 {
-    top: -1rem !important;
+    position: static !important;
+    display: block;
+    margin: 0 0.5rem 0.2rem 0.5rem;
+    padding: 0.1rem 0.5rem;
     font-size: 0.75rem;
+    font-weight: 600;
     white-space: nowrap;
     max-width: calc(100% - 1rem);
     overflow: hidden;
     text-overflow: ellipsis;
-    background-color: #1a1a1a !important;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent !important;
+    color: #c9a96e;
   }
 
   /* 内嵌立绘 — 小屏不浮动，居中显示 */
