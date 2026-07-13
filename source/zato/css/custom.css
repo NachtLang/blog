@@ -9,6 +9,13 @@
   font-display: swap;
 }
 
+/* 章节分段渲染 — 浏览器跳过不可见章节，大幅减少首屏解析量 */
+/* iOS Safari 15.4+ / Chrome 85+ / Firefox 125+ 均支持 */
+.chapter-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
 /* 确保中文显示正确 */
 body {
   font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', sans-serif;
