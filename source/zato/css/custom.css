@@ -471,15 +471,20 @@ html.font-xl { font-size: 20px; }
   article .min-h-36 {
     min-height: 5rem !important;
   }
+  /* pt-8 保持 2rem 不变，防止角色标签遮挡文字 */
   article .pt-8 {
-    padding-top: 1.5rem !important;
+    padding-top: 2rem !important;
   }
   article .p-4 {
     padding: 0.75rem !important;
   }
-  /* 角色标签 — 防止溢出 */
+  /* 角色标签 — 防止换行遮挡文字 + 限制宽度防止溢出 */
   article .-top-2 {
     font-size: 0.8rem;
+    white-space: nowrap;
+    max-width: calc(100% - 1.25rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* 立绘 */
@@ -610,14 +615,20 @@ html.font-xl { font-size: 20px; }
   article .min-h-36 {
     min-height: 4rem !important;
   }
+  /* pt-8 保持 2rem 不变，防止角色标签遮挡文字 */
   article .pt-8 {
-    padding-top: 1.25rem !important;
+    padding-top: 2rem !important;
   }
   article .p-4 {
     padding: 0.6rem !important;
   }
+  /* 角色标签 — 防止换行遮挡文字 */
   article .-top-2 {
     font-size: 0.75rem;
+    white-space: nowrap;
+    max-width: calc(100% - 1rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* 内嵌立绘 — 小屏上改为不浮动，避免文字被挤到窄列 */
