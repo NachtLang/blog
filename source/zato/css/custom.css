@@ -467,9 +467,9 @@ html.font-xl { font-size: 20px; }
     margin-bottom: 1.25rem !important;
   }
 
-  /* 对话框 — 移动端保持足够高度容纳内嵌头像 */
+  /* 对话框 — 移动端容纳标签(1.5rem) + 头像(110px+边距) = ~10rem */
   article .min-h-36 {
-    min-height: 8rem !important;
+    min-height: 10rem !important;
   }
   /* 标签改为自然流布局后，还原顶部内边距 */
   article .pt-8 {
@@ -630,9 +630,9 @@ html.font-xl { font-size: 20px; }
     height: 90px !important;
   }
 
-  /* 对话框 — 小屏保持足够高度 */
+  /* 对话框 — 小屏容纳标签 + 头像(90px+边距) */
   article .min-h-36 {
-    min-height: 7rem !important;
+    min-height: 8.5rem !important;
   }
   /* 标签改为自然流布局后，还原顶部内边距 */
   article .pt-8 {
