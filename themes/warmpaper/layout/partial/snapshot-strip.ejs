@@ -1,0 +1,34 @@
+<%
+  // 读取并按日期倒序排序
+  var photos = (site.data && site.data.photos) ? site.data.photos.slice() : [];
+  photos.sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
+  var recent = photos.slice(0, (theme.snapshot && theme.snapshot.home_count) || 3);
+%>
+<% if (recent.length) { %>
+<section class="snapshot-strip">
+  <div class="snapshot-strip-head">
+    <div class="snapshot-strip-left">
+      <div class="snapshot-strip-kicker">RECENT · SNAPSHOTS</div>
+      <h2 class="snapshot-strip-title">随手<em>拍</em></h2>
+    </div>
+    <a class="snapshot-strip-more" href="<%- url_for('/photos/') %>">查看全部 →</a>
+  </div>
+  <div class="snapshot-strip-grid snapshot-strip-grid-<%= recent.length %>" data-snapshot-strip>
+    <% recent.forEach(function(p, i){ %>
+      <a class="snapshot-thumb"
+         href="<%- url_for('/photos/') %>"
+         data-photo-index="<%= i %>"
+         data-photo-src="<%= p.src %>"
+         data-photo-title="<%= p.title || '' %>"
+         data-photo-date="<%- date(p.date, 'YYYY-MM-DD') %>"
+         data-photo-location="<%= p.location || '' %>"
+         data-photo-desc="<%= p.desc || '' %>">
+        <img loading="lazy" src="<%= p.src %>" alt="<%= p.title || '' %>">
+        <span class="snapshot-thumb-overlay">
+          <span class="snapshot-thumb-title"><%= p.title || '' %></span>
+        </span>
+      </a>
+    <% }) %>
+  </div>
+</section>
+<% } %>

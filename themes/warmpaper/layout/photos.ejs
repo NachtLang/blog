@@ -1,0 +1,36 @@
+<%
+  var photos = (site.data && site.data.photos) ? site.data.photos.slice() : [];
+  photos.sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
+%>
+<div class="photos-page">
+  <header class="photos-hero">
+    <div class="photos-hero-kicker">PHOTOGRAPHY · <%= photos.length %> SHOTS</div>
+    <h1 class="photos-hero-title">随手<em>拍</em></h1>
+    <p class="photos-hero-desc">不刻意构图，只记录在场。</p>
+  </header>
+
+  <% if (photos.length) { %>
+    <div class="photos-masonry" data-photos-grid>
+      <% photos.forEach(function(p, i){ %>
+        <figure class="photos-cell"
+                data-photo-index="<%= i %>"
+                data-photo-src="<%= p.src %>"
+                data-photo-title="<%= p.title || '' %>"
+                data-photo-date="<%- date(p.date, 'YYYY-MM-DD') %>"
+                data-photo-location="<%= p.location || '' %>"
+                data-photo-desc="<%= p.desc || '' %>">
+          <img loading="lazy" src="<%= p.src %>" alt="<%= p.title || '' %>">
+          <figcaption>
+            <div class="photos-cell-title"><%= p.title || '' %></div>
+            <div class="photos-cell-meta">
+              <%- date(p.date, 'YYYY·MM') %><% if (p.location) { %> · <%= p.location %><% } %>
+            </div>
+            <% if (p.desc) { %><div class="photos-cell-desc"><%= p.desc %></div><% } %>
+          </figcaption>
+        </figure>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="photos-empty">还没有照片，去 <code>source/_data/photos.yml</code> 里添加吧。</p>
+  <% } %>
+</div>

@@ -13,3 +13,11 @@ hexo.extend.generator.register('categories_index', function(locals) {
     layout: ['categories']
   };
 });
+
+hexo.extend.generator.register('photos_index', function(locals) {
+  return {
+    path: 'photos/index.html',
+    data: { title: '随手拍' },
+    layout: ['photos']
+  };
+});

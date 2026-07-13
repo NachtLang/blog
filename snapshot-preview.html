@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>「随手拍」板块 · A/B 方案预览</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  /* ============== 公共：选项卡 / 容器 ============== */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'LXGW WenKai GB','Segoe UI',system-ui,sans-serif;background:#1a1a1a;color:#eee}
+  .ab-bar{position:sticky;top:0;z-index:100;display:flex;justify-content:center;gap:8px;padding:12px;background:rgba(20,20,20,.92);backdrop-filter:blur(8px);border-bottom:1px solid #333}
+  .ab-bar button{padding:8px 22px;border:1px solid #555;background:transparent;color:#ccc;border-radius:999px;cursor:pointer;font:inherit}
+  .ab-bar button.active{background:#DA7756;border-color:#DA7756;color:#fff}
+  .ab-bar .hint{align-self:center;color:#888;font-size:13px;margin-left:12px}
+  .panel{display:none}
+  .panel.active{display:block}
+
+  /* ============================================================
+     方案 A：与博客同款 warmpaper 暖色调 + 等高网格
+     ============================================================ */
+  .A{
+    --color-bg:#FAF9F7; --color-surface:#FFFFFF; --color-surface-hover:#FDF8F4;
+    --color-accent:#DA7756; --color-accent-hover:#C4684A;
+    --color-text:#2D2B28; --color-text-secondary:#6B6560; --color-text-tertiary:#9B9490;
+    --color-border:#E5E0D8;
+    --grid-color:rgba(218,119,86,.07); --grid-color-strong:rgba(218,119,86,.12); --grid-size:24px;
+    background:var(--color-bg);
+    background-image:
+      linear-gradient(var(--grid-color) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid-color) 1px,transparent 1px),
+      linear-gradient(var(--grid-color-strong) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid-color-strong) 1px,transparent 1px);
+    background-size:var(--grid-size) var(--grid-size),var(--grid-size) var(--grid-size),
+                    calc(var(--grid-size)*4) calc(var(--grid-size)*4),
+                    calc(var(--grid-size)*4) calc(var(--grid-size)*4);
+    color:var(--color-text); min-height:100vh; padding:32px 16px;
+  }
+  .A .wrap{max-width:1200px;margin:0 auto}
+
+  /* — 主页板块：标题 + 三张缩略图横排 — */
+  .A .home-block{margin:0 auto 56px;max-width:800px}
+  .A .home-block-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--color-border)}
+  .A .home-block-head h2{font-size:22px;font-weight:600;letter-spacing:.5px}
+  .A .home-block-head h2::before{content:"📷  ";opacity:.7}
+  .A .home-block-head a.more{font-size:14px;color:var(--color-accent);text-decoration:none}
+  .A .home-block-head a.more:hover{color:var(--color-accent-hover)}
+  .A .home-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .A .home-thumbs .thumb{aspect-ratio:1/1;overflow:hidden;border-radius:8px;border:1px solid var(--color-border);background:var(--color-surface);cursor:pointer;transition:transform .25s, box-shadow .25s}
+  .A .home-thumbs .thumb:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+  .A .home-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* — 摄影专属页：等高网格 + 暖色卡片 — */
+  .A .gallery-page-head{text-align:center;margin:24px 0 32px}
+  .A .gallery-page-head h1{font-size:32px;font-weight:600;letter-spacing:1px}
+  .A .gallery-page-head p{color:var(--color-text-secondary);margin-top:8px}
+  .A .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .A .gallery-grid figure{margin:0;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s}
+  .A .gallery-grid figure:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.08)}
+  .A .gallery-grid .img-wrap{aspect-ratio:1/1;overflow:hidden;background:#f0ebe3}
+  .A .gallery-grid img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+  .A .gallery-grid figure:hover img{transform:scale(1.04)}
+  .A .gallery-grid figcaption{padding:10px 12px;font-size:13px;color:var(--color-text-secondary);display:flex;justify-content:space-between}
+  .A .gallery-grid figcaption .ttl{color:var(--color-text)}
+
+  /* ============================================================
+     方案 B：暗色画廊 + 瀑布流（设计语言区别于博客）
+     ============================================================ */
+  .B{
+    background:#0e0e10;color:#e8e6e3;min-height:100vh;padding:40px 24px;
+    background-image:radial-gradient(circle at 20% 0%,rgba(218,119,86,.08),transparent 50%),
+                     radial-gradient(circle at 80% 100%,rgba(80,140,200,.06),transparent 50%);
+  }
+  .B .wrap{max-width:1280px;margin:0 auto}
+
+  /* 主页板块：极简横向条 + 数字大标题 */
+  .B .home-block{margin:0 auto 64px;max-width:880px;padding:24px;border:1px solid #2a2a2d;border-radius:14px;background:rgba(255,255,255,.02);backdrop-filter:blur(4px)}
+  .B .home-block-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+  .B .home-block-head .left .label{font-size:12px;letter-spacing:3px;color:#888;text-transform:uppercase}
+  .B .home-block-head .left h2{font-size:26px;font-weight:300;margin-top:4px;font-family:Georgia,serif;letter-spacing:1px}
+  .B .home-block-head .left h2 em{color:#DA7756;font-style:normal}
+  .B .home-block-head a.more{color:#ccc;text-decoration:none;font-size:13px;padding:6px 14px;border:1px solid #444;border-radius:999px;transition:all .2s}
+  .B .home-block-head a.more:hover{border-color:#DA7756;color:#DA7756}
+  .B .home-thumbs{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:6px;height:240px}
+  .B .home-thumbs .thumb{overflow:hidden;border-radius:6px;cursor:pointer;position:relative}
+  .B .home-thumbs .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s,filter .3s;filter:saturate(.9)}
+  .B .home-thumbs .thumb:hover img{transform:scale(1.06);filter:saturate(1.1)}
+  .B .home-thumbs .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),transparent 40%);opacity:0;transition:opacity .3s}
+  .B .home-thumbs .thumb:hover::after{opacity:1}
+
+  /* 摄影专属页：瀑布流 + 大标题 */
+  .B .gallery-page-head{text-align:left;max-width:1280px;margin:0 auto 40px;padding-bottom:20px;border-bottom:1px solid #2a2a2d}
+  .B .gallery-page-head .kicker{font-size:12px;letter-spacing:4px;color:#888;text-transform:uppercase}
+  .B .gallery-page-head h1{font-size:48px;font-weight:300;font-family:Georgia,serif;letter-spacing:2px;margin-top:8px}
+  .B .gallery-page-head h1 em{color:#DA7756;font-style:italic}
+  .B .gallery-page-head p{color:#aaa;margin-top:12px;max-width:640px}
+  .B .masonry{column-count:4;column-gap:14px}
+  @media (max-width:1100px){.B .masonry{column-count:3}}
+  @media (max-width:760px){.B .masonry{column-count:2}}
+  .B .masonry figure{break-inside:avoid;margin:0 0 14px;border-radius:8px;overflow:hidden;cursor:pointer;position:relative;background:#1a1a1d}
+  .B .masonry img{width:100%;height:auto;display:block;transition:transform .5s,filter .3s;filter:saturate(.92) brightness(.97)}
+  .B .masonry figure:hover img{transform:scale(1.03);filter:saturate(1.08) brightness(1)}
+  .B .masonry figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);color:#eee;font-size:13px;opacity:0;transform:translateY(8px);transition:all .3s}
+  .B .masonry figure:hover figcaption{opacity:1;transform:translateY(0)}
+  .B .masonry figcaption .ttl{font-size:14px;color:#fff;margin-bottom:2px}
+  .B .masonry figcaption .meta{color:#bbb;font-size:12px;letter-spacing:.5px}
+
+  /* ============================================================
+     公共：灯箱
+     ============================================================ */
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:9999;padding:40px;cursor:zoom-out}
+  .lightbox.show{display:flex}
+  .lightbox img{max-width:100%;max-height:100%;border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .lightbox .close{position:absolute;top:20px;right:24px;color:#fff;background:none;border:0;font-size:30px;cursor:pointer;opacity:.7}
+  .lightbox .close:hover{opacity:1}
+  .lightbox .cap{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:#ddd;font-size:14px;letter-spacing:1px}
+  .lightbox .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:0;color:#fff;width:48px;height:48px;border-radius:50%;cursor:pointer;font-size:22px;transition:background .2s}
+  .lightbox .nav:hover{background:rgba(255,255,255,.18)}
+  .lightbox .nav.prev{left:24px}
+  .lightbox .nav.next{right:24px}
+
+  /* 页面分割线 */
+  .section-mark{max-width:1200px;margin:0 auto 24px;color:#888;font-size:12px;letter-spacing:4px;text-transform:uppercase;padding:8px 0;border-bottom:1px dashed #333}
+</style>
+</head>
+<body>
+
+<div class="ab-bar">
+  <button id="btnA" class="active">方案 A · 与博客同款（warmpaper 暖色 + 等高网格）</button>
+  <button id="btnB">方案 B · 暗色画廊（瀑布流 + 大标题）</button>
+  <span class="hint">点缩略图原地预览 · 同一组示例图</span>
+</div>
+
+<!-- ============ 方案 A ============ -->
+<div id="panelA" class="panel active A">
+  <div class="wrap">
+
+    <div class="section-mark">主页 · 板块入口</div>
+
+    <section class="home-block">
+      <div class="home-block-head">
+        <h2>随手拍</h2>
+        <a class="more" href="#">进入随手拍 →</a>
+      </div>
+      <div class="home-thumbs" id="A-home">
+        <!-- 4 张最近 -->
+      </div>
+    </section>
+
+    <div class="section-mark">/photos · 摄影专属页</div>
+
+    <header class="gallery-page-head">
+      <h1>随手拍</h1>
+      <p>记录被光线打动的瞬间。</p>
+    </header>
+    <div class="gallery-grid" id="A-gallery"></div>
+  </div>
+</div>
+
+<!-- ============ 方案 B ============ -->
+<div id="panelB" class="panel B">
+  <div class="wrap">
+
+    <div class="section-mark" style="color:#666;border-color:#222">主页 · 板块入口</div>
+
+    <section class="home-block">
+      <div class="home-block-head">
+        <div class="left">
+          <div class="label">RECENT · SNAPSHOTS</div>
+          <h2>随手<em>拍</em></h2>
+        </div>
+        <a class="more" href="#">查看全部 →</a>
+      </div>
+      <div class="home-thumbs" id="B-home"></div>
+    </section>
+
+    <div class="section-mark" style="color:#666;border-color:#222">/photos · 摄影专属页</div>
+
+    <header class="gallery-page-head">
+      <div class="kicker">PHOTOGRAPHY · 2024 — 2026</div>
+      <h1>随手<em>拍</em></h1>
+      <p>不刻意构图，只记录在场。城市、夜色、雨后的玻璃，与一些没说出口的安静。</p>
+    </header>
+    <div class="masonry" id="B-gallery"></div>
+  </div>
+</div>
+
+<!-- 公共灯箱 -->
+<div class="lightbox" id="lb">
+  <button class="close" aria-label="close">×</button>
+  <button class="nav prev" aria-label="prev">‹</button>
+  <img src="" alt="">
+  <button class="nav next" aria-label="next">›</button>
+  <div class="cap"></div>
+</div>
+
+<script>
+  // ====== 示例图（用 picsum 占位，按真实尺寸生成不同高度，便于看瀑布流） ======
+  const photos = [
+    {src:'https://picsum.photos/id/1015/1200/800',  ttl:'山涧',     meta:'2026·05'},
+    {src:'https://picsum.photos/id/1025/1000/1300', ttl:'雨后',     meta:'2026·04'},
+    {src:'https://picsum.photos/id/1043/1200/900',  ttl:'城市边缘', meta:'2026·03'},
+    {src:'https://picsum.photos/id/1059/1100/1400', ttl:'夜归',     meta:'2026·02'},
+    {src:'https://picsum.photos/id/1062/1200/800',  ttl:'晨光',     meta:'2026·01'},
+    {src:'https://picsum.photos/id/1074/1000/1300', ttl:'巷口',     meta:'2025·12'},
+    {src:'https://picsum.photos/id/1080/1200/900',  ttl:'静物',     meta:'2025·11'},
+    {src:'https://picsum.photos/id/110/1100/1400',  ttl:'远山',     meta:'2025·10'},
+    {src:'https://picsum.photos/id/119/1200/800',   ttl:'落日',     meta:'2025·09'},
+    {src:'https://picsum.photos/id/129/1000/1300',  ttl:'湖边',     meta:'2025·08'},
+    {src:'https://picsum.photos/id/152/1200/900',   ttl:'冷调',     meta:'2025·07'},
+    {src:'https://picsum.photos/id/164/1100/1400',  ttl:'树影',     meta:'2025·06'},
+  ];
+
+  // 主页只放最近 4 张（按你说的 3-5 张范围）
+  const recent = photos.slice(0, 4);
+
+  // ====== 渲染 ======
+  function thumb(p, cls){ return `<div class="thumb ${cls||''}" data-src="${p.src}" data-ttl="${p.ttl}" data-meta="${p.meta}"><img loading="lazy" src="${p.src}" alt="${p.ttl}"></div>`; }
+  function figureA(p){ return `<figure data-src="${p.src}" data-ttl="${p.ttl}" data-meta="${p.meta}"><div class="img-wrap"><img loading="lazy" src="${p.src}" alt="${p.ttl}"></div><figcaption><span class="ttl">${p.ttl}</span><span>${p.meta}</span></figcaption></figure>`; }
+  function figureB(p){ return `<figure data-src="${p.src}" data-ttl="${p.ttl}" data-meta="${p.meta}"><img loading="lazy" src="${p.src}" alt="${p.ttl}"><figcaption><div class="ttl">${p.ttl}</div><div class="meta">${p.meta}</div></figcaption></figure>`; }
+
+  document.getElementById('A-home').innerHTML    = recent.map(p=>thumb(p)).join('');
+  document.getElementById('B-home').innerHTML    = recent.slice(0,3).map(p=>thumb(p)).join('');
+  document.getElementById('A-gallery').innerHTML = photos.map(figureA).join('');
+  document.getElementById('B-gallery').innerHTML = photos.map(figureB).join('');
+
+  // ====== 切换 ======
+  const btnA=document.getElementById('btnA'), btnB=document.getElementById('btnB');
+  const pA=document.getElementById('panelA'), pB=document.getElementById('panelB');
+  btnA.onclick=()=>{btnA.classList.add('active');btnB.classList.remove('active');pA.classList.add('active');pB.classList.remove('active');window.scrollTo(0,0);}
+  btnB.onclick=()=>{btnB.classList.add('active');btnA.classList.remove('active');pB.classList.add('active');pA.classList.remove('active');window.scrollTo(0,0);}
+
+  // ====== 灯箱 ======
+  const lb=document.getElementById('lb'),lbImg=lb.querySelector('img'),lbCap=lb.querySelector('.cap');
+  let curList=[],curIdx=0;
+  function openLB(list,idx){curList=list;curIdx=idx;render();lb.classList.add('show');document.body.style.overflow='hidden';}
+  function closeLB(){lb.classList.remove('show');document.body.style.overflow='';}
+  function render(){const p=curList[curIdx];lbImg.src=p.src;lbImg.alt=p.ttl;lbCap.textContent=`${p.ttl} · ${p.meta}`;}
+  function step(d){curIdx=(curIdx+d+curList.length)%curList.length;render();}
+  lb.querySelector('.close').onclick=closeLB;
+  lb.querySelector('.prev').onclick=e=>{e.stopPropagation();step(-1);};
+  lb.querySelector('.next').onclick=e=>{e.stopPropagation();step(1);};
+  lb.addEventListener('click',e=>{if(e.target===lb||e.target===lbImg)closeLB();});
+  document.addEventListener('keydown',e=>{if(!lb.classList.contains('show'))return;if(e.key==='Escape')closeLB();else if(e.key==='ArrowLeft')step(-1);else if(e.key==='ArrowRight')step(1);});
+
+  // 绑定：所有 [data-src] 元素都可触发灯箱；列表上下文由所在容器决定
+  function bind(containerSel, listSrc){
+    document.querySelectorAll(containerSel+' [data-src]').forEach((el,i)=>{
+      el.addEventListener('click',()=>openLB(listSrc, i));
+    });
+  }
+  bind('#A-home',    recent);
+  bind('#B-home',    recent.slice(0,3));
+  bind('#A-gallery', photos);
+  bind('#B-gallery', photos);
+</script>
+</body>
+</html>

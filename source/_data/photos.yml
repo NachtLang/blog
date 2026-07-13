@@ -1,0 +1,66 @@
+# 随手拍数据源
+# 字段说明：
+#   src      （必填）图片路径，建议放 source/photos/ 下，用 /photos/xxx.jpg 引用
+#   title    （可选）标题
+#   date     （必填，影响排序，最新在前）格式 YYYY-MM-DD
+#   location （可选）地点
+#   desc     （可选）一句话描述
+#
+# 示例先用 picsum 占位，替换成你自己的照片即可。
+
+- src: https://picsum.photos/id/1015/1600/1067
+  title: 山涧
+  date: 2026-05-12
+  location: 西湖
+  desc: 雨后的光
+
+- src: https://picsum.photos/id/1025/1200/1500
+  title: 雨后
+  date: 2026-04-20
+  location: 上海
+  desc: 玻璃上的反光
+
+- src: https://picsum.photos/id/1043/1600/1200
+  title: 城市边缘
+  date: 2026-03-08
+  location: 杭州
+
+- src: https://picsum.photos/id/1059/1200/1500
+  title: 夜归
+  date: 2026-02-14
+  location: 成都
+
+- src: https://picsum.photos/id/1062/1600/1067
+  title: 晨光
+  date: 2026-01-03
+  location: 北京
+
+- src: https://picsum.photos/id/1074/1200/1500
+  title: 巷口
+  date: 2025-12-22
+  location: 苏州
+
+- src: https://picsum.photos/id/1080/1600/1200
+  title: 静物
+  date: 2025-11-17
+
+- src: https://picsum.photos/id/110/1200/1500
+  title: 远山
+  date: 2025-10-05
+  location: 川西
+
+- src: https://picsum.photos/id/119/1600/1067
+  title: 落日
+  date: 2025-09-18
+
+- src: https://picsum.photos/id/129/1200/1500
+  title: 湖边
+  date: 2025-08-09
+
+- src: https://picsum.photos/id/152/1600/1200
+  title: 冷调
+  date: 2025-07-21
+
+- src: https://picsum.photos/id/164/1200/1500
+  title: 树影
+  date: 2025-06-11

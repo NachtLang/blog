@@ -1,0 +1,189 @@
+/* ZATO WebBook - 字体样式 */
+
+/* ============ 字体定义 ============ */
+
+/* 上图东观体 - 中文字体 */
+@font-face {
+  font-family: 'ShangTuDongGuan';
+  src: url('../fonts/上图东观体-常规.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Source Serif 4 - 英文衬线字体 */
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('../fonts/source-serif-4-latin-opsz-normal.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============ 字体应用 ============ */
+
+/* 基础字体设置 */
+body {
+  font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans CN', sans-serif;
+}
+
+/* 标题字体 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'ShangTuDongGuan', 'Source Serif 4', 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', serif;
+}
+
+/* 代码字体 */
+code, pre, kbd, samp {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+/* 对话框字体 */
+.dialogue-box {
+  font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans CN', sans-serif;
+}
+
+/* 角色名标签字体 */
+.character-tag {
+  font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans CN', sans-serif;
+  font-weight: 600;
+}
+
+/* 章节标题字体 */
+.chapter-heading {
+  font-family: 'ShangTuDongGuan', 'Source Serif 4', 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', serif;
+}
+
+/* 目录字体 */
+details.toc {
+  font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans CN', sans-serif;
+}
+
+/* 页脚字体 */
+.site-footer {
+  font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans CN', sans-serif;
+}
+
+/* ============ 字体大小调整 ============ */
+
+/* 确保中文显示清晰 */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* 高分辨率屏幕优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+}
+
+/* ============ 字体加载优化 ============ */
+
+/* 字体加载前的备用样式 */
+.fonts-loading body {
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif;
+}
+
+.fonts-loading h1,
+.fonts-loading h2,
+.fonts-loading h3,
+.fonts-loading h4,
+.fonts-loading h5,
+.fonts-loading h6 {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+}
+
+/* 字体加载完成后的样式 */
+.fonts-loaded body {
+  font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans CN', sans-serif;
+}
+
+.fonts-loaded h1,
+.fonts-loaded h2,
+.fonts-loaded h3,
+.fonts-loaded h4,
+.fonts-loaded h5,
+.fonts-loaded h6 {
+  font-family: 'ShangTuDongGuan', 'Source Serif 4', 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', serif;
+}
+
+/* ============ 特殊字符支持 ============ */
+
+/* 确保特殊标点符号正确显示 */
+.dialogue-text {
+  font-feature-settings: "kern" 1, "liga" 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* 中文标点符号优化 */
+.dialogue-text::lang(zh) {
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+
+/* ============ 响应式字体调整 ============ */
+
+/* 移动端字体调整 */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .dialogue-box {
+    font-size: 14px;
+  }
+
+  .character-tag {
+    font-size: 12px;
+  }
+
+  .chapter-heading {
+    font-size: 1.5rem;
+  }
+}
+
+/* 平板端字体调整 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  body {
+    font-size: 15px;
+  }
+
+  .dialogue-box {
+    font-size: 15px;
+  }
+}
+
+/* 桌面端字体调整 */
+@media (min-width: 1025px) {
+  body {
+    font-size: 16px;
+  }
+
+  .dialogue-box {
+    font-size: 16px;
+  }
+}
+
+/* ============ 打印字体优化 ============ */
+
+@media print {
+  body {
+    font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  .dialogue-box {
+    font-size: 11pt;
+  }
+
+  .character-tag {
+    font-size: 10pt;
+  }
+
+  .chapter-heading {
+    font-size: 14pt;
+  }
+}
