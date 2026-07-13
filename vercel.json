@@ -3,5 +3,8 @@
   "installCommand": "npm install",
   "buildCommand": "node node_modules/hexo-cli/bin/hexo generate",
   "devCommand": "node node_modules/hexo-cli/bin/hexo server",
-  "outputDirectory": "public"
+  "outputDirectory": "public",
+  "redirects": [
+    { "source": "/zato", "destination": "/zato/", "permanent": true }
+  ]
 }
