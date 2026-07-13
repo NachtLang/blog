@@ -471,20 +471,22 @@ html.font-xl { font-size: 20px; }
   article .min-h-36 {
     min-height: 5rem !important;
   }
-  /* pt-8 保持 2rem 不变，防止角色标签遮挡文字 */
+  /* pt-8 → 2.75rem：移动端增大顶部间距，确保标签完全不遮挡文字 */
   article .pt-8 {
-    padding-top: 2rem !important;
+    padding-top: 2.75rem !important;
   }
   article .p-4 {
     padding: 0.75rem !important;
   }
-  /* 角色标签 — 防止换行遮挡文字 + 限制宽度防止溢出 */
+  /* 角色标签 — 上移 + 不换行 + 限制宽度 + 不透明白底 */
   article .-top-2 {
+    top: -0.75rem !important;
     font-size: 0.8rem;
     white-space: nowrap;
     max-width: calc(100% - 1.25rem);
     overflow: hidden;
     text-overflow: ellipsis;
+    background-color: #1a1a1a !important;
   }
 
   /* 立绘 */
@@ -615,20 +617,22 @@ html.font-xl { font-size: 20px; }
   article .min-h-36 {
     min-height: 4rem !important;
   }
-  /* pt-8 保持 2rem 不变，防止角色标签遮挡文字 */
+  /* pt-8 → 2.75rem：小屏进一步增大顶部间距 */
   article .pt-8 {
-    padding-top: 2rem !important;
+    padding-top: 2.75rem !important;
   }
   article .p-4 {
     padding: 0.6rem !important;
   }
-  /* 角色标签 — 防止换行遮挡文字 */
+  /* 角色标签 — 上移 + 不换行 + 不透明白底 */
   article .-top-2 {
+    top: -0.75rem !important;
     font-size: 0.75rem;
     white-space: nowrap;
     max-width: calc(100% - 1rem);
     overflow: hidden;
     text-overflow: ellipsis;
+    background-color: #1a1a1a !important;
   }
 
   /* 内嵌立绘 — 小屏上改为不浮动，避免文字被挤到窄列 */
