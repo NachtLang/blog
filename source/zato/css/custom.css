@@ -467,20 +467,20 @@ html.font-xl { font-size: 20px; }
     margin-bottom: 1.25rem !important;
   }
 
-  /* 对话框 — 减小内边距 */
+  /* 对话框 — 移动端保持足够高度容纳内嵌头像 */
   article .min-h-36 {
-    min-height: 5rem !important;
+    min-height: 8rem !important;
   }
-  /* pt-8 → 2.75rem：移动端增大顶部间距，确保标签完全不遮挡文字 */
+  /* pt-8 → 3.25rem：确保标签与文字间足够间距 */
   article .pt-8 {
-    padding-top: 2.75rem !important;
+    padding-top: 3.25rem !important;
   }
   article .p-4 {
     padding: 0.75rem !important;
   }
-  /* 角色标签 — 上移 + 不换行 + 限制宽度 + 不透明白底 */
+  /* 角色标签 — 彻底上移 + 不换行 + 不透明白底 */
   article .-top-2 {
-    top: -0.75rem !important;
+    top: -1rem !important;
     font-size: 0.8rem;
     white-space: nowrap;
     max-width: calc(100% - 1.25rem);
@@ -489,15 +489,25 @@ html.font-xl { font-size: 20px; }
     background-color: #1a1a1a !important;
   }
 
-  /* 立绘 */
+  /* 立绘 — 增大尺寸 */
   .sprite img {
-    height: 12rem;
+    height: 16rem;
   }
 
-  /* 对话框内嵌立绘 */
+  /* 对话框内嵌头像 — 增大尺寸 + 防止溢出 */
   .size-30 {
-    width: 100px !important;
-    height: 100px !important;
+    width: 110px !important;
+    height: 110px !important;
+  }
+
+  /* 背景图 — 全视口宽度 */
+  figure.bg {
+    margin-left: calc(-50vw + 50%) !important;
+    width: 100vw !important;
+  }
+  figure.bg img {
+    width: 100%;
+    height: auto;
   }
 
   /* 旁白内边距 */
@@ -605,28 +615,28 @@ html.font-xl { font-size: 20px; }
   }
 
   .sprite img {
-    height: 9rem;
+    height: 14rem;
   }
 
   .size-30 {
-    width: 70px !important;
-    height: 70px !important;
+    width: 90px !important;
+    height: 90px !important;
   }
 
-  /* 对话框 — 进一步紧凑 */
+  /* 对话框 — 小屏保持足够高度 */
   article .min-h-36 {
-    min-height: 4rem !important;
+    min-height: 7rem !important;
   }
-  /* pt-8 → 2.75rem：小屏进一步增大顶部间距 */
+  /* pt-8 → 3.25rem：确保标签与文字间足够间距 */
   article .pt-8 {
-    padding-top: 2.75rem !important;
+    padding-top: 3.25rem !important;
   }
   article .p-4 {
     padding: 0.6rem !important;
   }
-  /* 角色标签 — 上移 + 不换行 + 不透明白底 */
+  /* 角色标签 — 彻底上移 + 不换行 + 不透明白底 */
   article .-top-2 {
-    top: -0.75rem !important;
+    top: -1rem !important;
     font-size: 0.75rem;
     white-space: nowrap;
     max-width: calc(100% - 1rem);
@@ -635,13 +645,23 @@ html.font-xl { font-size: 20px; }
     background-color: #1a1a1a !important;
   }
 
-  /* 内嵌立绘 — 小屏上改为不浮动，避免文字被挤到窄列 */
+  /* 内嵌立绘 — 小屏不浮动，居中显示 */
   article .float-right.size-30 {
     float: none !important;
     display: block !important;
     margin: 0.5rem auto !important;
-    width: 80px !important;
-    height: 80px !important;
+    width: 90px !important;
+    height: 90px !important;
+  }
+
+  /* 背景图 — 全视口宽度 */
+  figure.bg {
+    margin-left: calc(-50vw + 50%) !important;
+    width: 100vw !important;
+  }
+  figure.bg img {
+    width: 100%;
+    height: auto;
   }
 
   .schedule-block-inner {
@@ -661,11 +681,6 @@ html.font-xl { font-size: 20px; }
 
   .progress-container {
     height: 28px;
-  }
-
-  figure.bg {
-    margin-left: -0.5rem !important;
-    width: calc(100% + 1rem) !important;
   }
 
   .banner-logo {
