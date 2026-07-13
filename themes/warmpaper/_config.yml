@@ -3,6 +3,8 @@
 # Navigation menu
 menu:
   Home: /
+  Photos: /photos
+  ZATO: /zato
   Archives: /archives
   Tags: /tags
   Categories: /categories
@@ -29,6 +31,10 @@ profile:
 
 # Post excerpt
 excerpt_link: 阅读全文
+
+# Snapshot strip on homepage（随手拍主页板块）
+snapshot:
+  home_count: 3   # 主页展示最近几张，建议 3-5
 
 # Footer
 copyright: "© AwaKeSpace"
