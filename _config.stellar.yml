@@ -1,0 +1,104 @@
+# Stellar v2 站点配置
+# 只写需要覆盖的项，其余沿用主题默认值（node_modules/hexo-theme-stellar/_config.yml）。
+# 注意：数组整体替换，所以 menu / sitemap 必须写全。
+
+leftbar:
+  enabled: true
+  default_state: expanded
+  brand:
+    search: true
+    style: regular
+    ghrepo: null
+    ghuser: null
+    image:
+      src: /images/logo.svg
+      variant: avatar
+    name: AwaKeSpace
+    tagline: 一个安静的个人博客
+    href: /
+  menu_columns: 1
+  menu:
+    - id: post
+      title: 文章
+      icon: default:documents
+      url: /
+    - id: photos
+      title: 随手拍
+      icon: default:category-open
+      url: /photos/
+    - id: zato
+      title: ZATO
+      icon: default:notebook
+      url: /zato/
+    - id: archives
+      title: 归档
+      icon: default:calendar
+      url: /archives/
+    - id: tags
+      title: 标签
+      icon: default:hashtag
+      url: /tags/
+    - id: about
+      title: 关于
+      icon: default:profile
+      url: /about/
+  widgets: []
+  footer:
+    actions: []
+
+rightbar:
+  enabled: true
+  widgets: []
+
+footer:
+  sitemap:
+    - title: 浏览
+      items:
+        - '[最近文章](/)'
+        - '[随手拍](/photos/)'
+        - '[内容归档](/archives/)'
+    - title: 索引
+      items:
+        - '[标签](/tags/)'
+        - '[分类](/categories/)'
+    - title: 关于
+      items:
+        - '[关于本站](/about/)'
+        - '[ZATO 电子书](/zato/)'
+  content: |
+    本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
+    除特别声明外，文章采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议。
+
+profiles:
+  wiki_index:
+    active_menu: post
+  notebooks:
+    active_menu: post
+  notebook:
+    active_menu: post
+  note:
+    active_menu: post
+  topic:
+    active_menu: post
+
+article:
+  style: story
+  listing:
+    show_tags: true
+  show_reading_time: true
+
+appearance:
+  preset: minimal
+  color_scheme: auto
+  colors:
+    primary: hsl(16 62% 60%)
+    accent: hsl(16 72% 52%)
+  typography:
+    font_smoothing: antialiased
+    font_family:
+      body: 'system-ui, "PingFang SC", "Microsoft Yahei", "Segoe UI", sans-serif'
+      code: 'Menlo, Consolas, "Cascadia Code", monospace'
+
+features:
+  color_scheme_switch:
+    enabled: true

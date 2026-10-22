@@ -48,36 +48,44 @@ figure.sprite {
   margin-top: 0.25rem;
 }
 
-/* 背景图片样式 - 全宽展示，紧凑间距 */
-.bg {
-  margin-left: calc(-50vw + 50%);
-  width: 100vw;
-  text-align: center;
+/* ========== 背景图 / CG：铺满视口宽度，水平居中 ==========
+   单一类名 + 单一规则，避免多套选择器互相覆盖。
+   左右外边距取 calc(50% - 50vw)：父容器的半宽减半屏宽，
+   正好把内容列撑到视口边缘，且不受滚动条宽度影响。 */
+figure.zato-img {
+  display: block !important;
+  float: none !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0.5rem calc(50% - 50vw) !important;
+  padding: 0 !important;
+  text-align: center !important;
+  border: 0 !important;
+  background: none !important;
 }
 
-.bg img {
-  width: 100%;
-  height: auto;
-  display: block;
+figure.zato-img > img.zato-img__el {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  border: 0 !important;
 }
 
-.bg figcaption {
-  text-align: center;
-  margin-top: 0.25rem;
-  margin-bottom: 0;
+/* 全宽图会略微超出视口（滚动条宽度），裁掉横向溢出 */
+html,
+body {
+  overflow-x: clip;
 }
 
 /* 使用高优先级选择器彻底覆盖 prose figure 的默认间距 */
 /* specificity: (0,1,3) + !important，确保覆盖 .prose :where(figure) 和 py-6/mt-2 等工具类 */
-article.prose figure.bg {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  margin-block-start: 0 !important;
-  margin-block-end: 0 !important;
-  padding-top: 0.25rem !important;
-  padding-bottom: 0.25rem !important;
-  padding-block-start: 0.25rem !important;
-  padding-block-end: 0.25rem !important;
+article.prose figure.zato-img {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 /* ========== 音频指示器 — 毛玻璃胶囊 ========== */
@@ -342,16 +350,24 @@ html.font-xl { font-size: 20px; }
 
 /* 响应式设计 */
 /* ========== 阅读进度条 ========== */
+html {
+  /* 锚点跳转时给顶部进度条留出空间，标题不被遮住 */
+  scroll-padding-top: 20px;
+}
+
 .progress-container {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 16px;
+  height: 10px;
   z-index: 9999;
   cursor: pointer;
   background: transparent;
-  /* 上方留透明点击区域，下方为轨道 */
+  /* 拖动进度条时不要触发页面滚动 */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .progress-track {
@@ -372,11 +388,14 @@ html.font-xl { font-size: 20px; }
   position: absolute;
   top: 0;
   left: 0;
-  width: 0%;
+  width: 100%;
   height: 100%;
   background: #e8c67a;
   box-shadow: 0 0 8px rgba(232, 198, 122, 0.5), 0 0 16px rgba(232, 198, 122, 0.2);
-  transition: width 0.15s ease-out;
+  /* 用 transform 推进，避免每帧改 width 触发重排 */
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  will-change: transform;
   pointer-events: none;
 }
 
@@ -436,6 +455,117 @@ html.font-xl { font-size: 20px; }
 .progress-container:hover .progress-tooltip,
 .progress-tooltip.visible {
   opacity: 1;
+}
+
+/* ========== 正在播放（常驻迷你条） ========== */
+/* 放在左下角，避开右下角的字号/配乐控件 */
+.bgm-now {
+  position: fixed;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 9997;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(52vw, 300px);
+  padding: 6px 8px 6px 10px;
+  border: 1px solid rgba(232, 198, 122, 0.35);
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  font-size: 0.8rem;
+  color: #e8c67a;
+}
+
+/* 配乐开关 + 分隔线 */
+.ctrl-sep {
+  width: 1px;
+  height: 1rem;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.bgm-auto-btn {
+  padding: 0.15rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.3rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.55);
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.bgm-auto-btn:hover {
+  color: #e8c67a;
+  border-color: rgba(232, 198, 122, 0.5);
+}
+
+.bgm-auto-btn.is-on {
+  color: #141414;
+  background: #e8c67a;
+  border-color: #e8c67a;
+}
+
+/* 音乐停止点：不可见锚点，只用于定位 */
+.audio-stop-mark {
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
+
+.bgm-now[hidden] {
+  display: none;
+}
+
+.bgm-now-dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #e8c67a;
+  box-shadow: 0 0 8px rgba(232, 198, 122, 0.8);
+  animation: bgm-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes bgm-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.82); }
+}
+
+.bgm-now-track {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bgm-now-stop {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid rgba(232, 198, 122, 0.4);
+  border-radius: 50%;
+  background: transparent;
+  color: #e8c67a;
+  font-size: 0.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.bgm-now-stop:hover,
+.bgm-now-stop:focus-visible {
+  background: #e8c67a;
+  color: #141414;
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bgm-now-dot { animation: none; }
 }
 
 /* ========== 移动端适配 ========== */
@@ -514,16 +644,6 @@ html.font-xl { font-size: 20px; }
     height: 110px !important;
   }
 
-  /* 背景图 — 全视口宽度 */
-  figure.bg {
-    margin-left: calc(-50vw + 50%) !important;
-    width: 100vw !important;
-  }
-  figure.bg img {
-    width: 100%;
-    height: auto;
-  }
-
   /* 旁白内边距 */
   article .px-4 {
     padding-left: 0.75rem !important;
@@ -535,11 +655,6 @@ html.font-xl { font-size: 20px; }
   }
 
   /* 背景图 — 修正 calc 偏移 */
-  figure.bg {
-    margin-left: -1rem !important;
-    width: calc(100% + 2rem) !important;
-  }
-
   /* 视频容器 */
   .video-container video {
     width: 100%;
@@ -580,7 +695,7 @@ html.font-xl { font-size: 20px; }
 
   /* 进度条 — 增大触摸区域 */
   .progress-container {
-    height: 24px;
+    height: 18px;
   }
   .progress-track {
     height: 3px;
@@ -675,16 +790,6 @@ html.font-xl { font-size: 20px; }
     height: 90px !important;
   }
 
-  /* 背景图 — 全视口宽度 */
-  figure.bg {
-    margin-left: calc(-50vw + 50%) !important;
-    width: 100vw !important;
-  }
-  figure.bg img {
-    width: 100%;
-    height: auto;
-  }
-
   .schedule-block-inner {
     font-size: 0.8rem;
     padding: 0.4rem 0.6rem 0.4rem 0.75rem;
@@ -701,7 +806,20 @@ html.font-xl { font-size: 20px; }
   }
 
   .progress-container {
-    height: 28px;
+    height: 20px;
+  }
+
+  /* 正在播放条：贴边缩小，避开 iPhone 底部手势区 */
+  .bgm-now {
+    left: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    max-width: 58vw;
+    padding: 5px 6px 5px 9px;
+    font-size: 0.72rem;
+  }
+  .bgm-now-stop {
+    width: 20px;
+    height: 20px;
   }
 
   .banner-logo {
