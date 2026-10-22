@@ -160,11 +160,6 @@ figure.zato-img > img.zato-img__el {
   width: 100% !important;
   max-width: none !important;
   height: auto !important;
-  /* 裁掉黑边后内容比例约 1.36:1，桌面铺满 1280 宽会有 940 高，
-     超过一屏。限制到 90vh，超出部分按比例裁上下（不拉伸）。 */
-  max-height: 90vh !important;
-  object-fit: cover !important;
-  object-position: center !important;
   margin: 0 auto !important;
   border: 0 !important;
 }
