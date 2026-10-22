@@ -1,12 +1,55 @@
 /* 自定义CSS - 补充参考模板CSS中缺少的样式 */
 
 /* 字体定义 */
-@font-face {
-  font-family: 'ShangTuDongGuan';
-  src: url('../fonts/上图东观体-常规.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+/* ========== 对话 / 旁白（精简标记） ==========
+   原来每行用 3-4 个 Tailwind 工具类，单是 class 属性就占 200 字节。
+   6548 个对话框 + 5272 行旁白把 HTML 撑到 2.5MB，解析要 700ms+。
+   改成短类名，样式用主题自己的变量复刻，视觉完全一致。 */
+.d {
+  position: relative;
+  margin-block: calc(var(--spacing, 0.25rem) * 4);
+  min-height: calc(var(--spacing, 0.25rem) * 36);
+  border: 1px solid var(--color-border);
+  text-align: start;
+  padding: calc(var(--spacing, 0.25rem) * 4);
+  padding-top: calc(var(--spacing, 0.25rem) * 8);
+  overflow-wrap: break-word;
+}
+
+/* 角色名用伪元素，省掉一个节点（6548 个对话框就省 6548 个盒子） */
+.d[data-n]::before {
+  content: attr(data-n);
+  position: absolute;
+  top: calc(var(--spacing, 0.25rem) * -2);
+  left: calc(var(--spacing, 0.25rem) * 2);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  padding-block: var(--spacing, 0.25rem);
+  padding-inline: calc(var(--spacing, 0.25rem) * 2);
+}
+
+.d-t {
+  padding: calc(var(--spacing, 0.25rem) * 4);
+  padding-top: calc(var(--spacing, 0.25rem) * 8);
+  overflow-wrap: break-word;
+}
+
+.d-fig {
+  float: right;
+  margin: 0.5rem 0 0.5rem 1rem;
+}
+
+.d-fig-el {
+  width: calc(var(--spacing, 0.25rem) * 30);
+  height: calc(var(--spacing, 0.25rem) * 30);
+}
+
+.n {
+  margin-block: var(--spacing, 0.25rem);
+  padding-block: var(--spacing, 0.25rem);
+  padding-inline: calc(var(--spacing, 0.25rem) * 4);
+  overflow-wrap: break-word;
+  text-align: start;
 }
 
 /* 章节容器：不要再加 content-visibility。
@@ -767,25 +810,30 @@ html {
   article .pt-8 {
     padding-top: 0.75rem !important;
   }
-  article .p-4 {
+  .d-t {
     padding: 0.75rem !important;
   }
   /* 角色标签 — 移动端改为自然流布局，作为文字上方标题，彻底消除重叠 */
-  article .-top-2 {
+  article .d {
+    padding: 0.75rem !important;
+  }
+  /* 角色名改成顶部通栏条，标签贴着盒子顶边，横线拉满 */
+  article .d[data-n]::before {
     position: static !important;
-    display: block;
-    margin: 0 0.5rem 0.25rem 0.5rem;
-    padding: 0.15rem 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-    max-width: calc(100% - 1rem);
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: block !important;
+    margin: -0.75rem -0.75rem 0.5rem -0.75rem;
+    padding: 0.5rem 0.75rem 0.3rem;
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     background: transparent !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: #c9a96e;
+    box-sizing: border-box;
+    width: auto;
   }
 
   /* 立绘 — 增大尺寸 */
@@ -800,7 +848,7 @@ html {
   }
 
   /* 旁白内边距 */
-  article .px-4 {
+  .n {
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important;
   }
@@ -915,32 +963,39 @@ html {
   article .pt-8 {
     padding-top: 0.6rem !important;
   }
-  article .p-4 {
+  .d-t {
     padding: 0.6rem !important;
   }
   /* 角色标签 — 小屏自然流布局，作为文字上方标题 */
-  article .-top-2 {
+  article .d {
+    padding: 0.75rem !important;
+  }
+  /* 角色名改成顶部通栏条，标签贴着盒子顶边，横线拉满 */
+  article .d[data-n]::before {
     position: static !important;
-    display: block;
-    margin: 0 0.5rem 0.2rem 0.5rem;
-    padding: 0.1rem 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    white-space: nowrap;
-    max-width: calc(100% - 1rem);
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: block !important;
+    margin: -0.75rem -0.75rem 0.5rem -0.75rem;
+    padding: 0.5rem 0.75rem 0.3rem;
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     background: transparent !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: #c9a96e;
+    box-sizing: border-box;
+    width: auto;
   }
 
   /* 内嵌立绘 — 小屏不浮动，居中显示 */
-  article .float-right.size-30 {
+  .d-fig {
     float: none !important;
     display: block !important;
     margin: 0.5rem auto !important;
+  }
+  .d-fig-el {
     width: 90px !important;
     height: 90px !important;
   }
