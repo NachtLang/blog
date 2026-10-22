@@ -9,10 +9,10 @@
   <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
   <!-- 资源预加载：关键 CSS 和字体优先下载，避免渲染阻塞 -->
   <link rel="preload" href="css/reference.css?v=1b308ad14b" as="style">
-  <link rel="preload" href="css/custom.css?v=6278efe5c2" as="style">
+  <link rel="preload" href="css/custom.css?v=fbc011d957" as="style">
   <link rel="preload" href="fonts/上图东观体-常规.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/reference.css?v=1b308ad14b">
-  <link rel="stylesheet" href="css/custom.css?v=6278efe5c2">
+  <link rel="stylesheet" href="css/custom.css?v=fbc011d957">
 </head>
 <body class="bg-bg text-fg dark">
   <div class="reader-tools" id="reader-tools">
@@ -13885,6 +13885,16 @@
     return a;
   }
 
+  /* 只有真正的解码/加载失败才算"无法播放"。
+     play() 被后续 pause() 打断会抛 AbortError，
+     自动配乐快速换曲时必然发生，不能当错误报给用户。 */
+  function isRealAudioError(err, el) {
+    if (el && el.error) return true;
+    if (!err) return true;
+    var n = err.name || '';
+    return n === 'NotSupportedError' || n === 'NotReadableError' || n === 'EncodingError';
+  }
+
   function stopBgm() {
     if (curBgm) {
       try { curBgm.pause(); curBgm.currentTime = 0; } catch (e) {}
@@ -13921,8 +13931,9 @@
 
     var p = a.play();
     if (p && p.catch) {
-      p.catch(function () {
+      p.catch(function (err) {
         if (curBgm === a) stopBgm();
+        if (!isRealAudioError(err, a)) return;
         if (nowBox) {
           nowBox.hidden = false;
           if (nowTrack) nowTrack.textContent = '⚠ 无法播放：' + name;
