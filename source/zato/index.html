@@ -15,16 +15,19 @@
   <link rel="stylesheet" href="css/custom.css">
 </head>
 <body class="bg-bg text-fg dark">
-  <div class="font-size-control">
-    <label for="font-size-select">字号</label>
-    <select id="font-size-select">
-      <option value="font-sm">小</option>
-      <option value="font-md" selected>中</option>
-      <option value="font-lg">大</option>
-      <option value="font-xl">特大</option>
-    </select>
-    <span class="ctrl-sep" aria-hidden="true"></span>
-    <button type="button" id="bgm-auto" class="bgm-auto-btn" aria-pressed="false" title="滚动到剧情处自动播放，滚到停止点自动关闭">配乐 关</button>
+  <div class="reader-tools" id="reader-tools">
+    <button type="button" class="rt-btn rt-music" id="bgm-auto" aria-pressed="false" title="自动配乐：滚到剧情处自动播放，滚到停止点自动关闭">
+      <svg class="rt-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#ai:material-symbols:music-note"></use></svg>
+      <span class="rt-text">配乐</span>
+    </button>
+    <span class="rt-divider" aria-hidden="true"></span>
+    <div class="rt-fonts" role="group" aria-label="正文字号">
+      <span class="rt-thumb" aria-hidden="true"></span>
+      <button type="button" data-font-size="font-sm" aria-label="小号字">字</button>
+      <button type="button" data-font-size="font-md" aria-label="中号字">字</button>
+      <button type="button" data-font-size="font-lg" aria-label="大号字">字</button>
+      <button type="button" data-font-size="font-xl" aria-label="特大号字">字</button>
+    </div>
   </div>
   <div class="progress-container" id="progress-container">
     <div class="progress-track">
@@ -13933,31 +13936,58 @@
     var src = btn.getAttribute('data-src');
     if (!src) return;
     /* 同一首再点一次 = 停止 */
-    if (curSrc === src) { stopBgm(); return; }
+    if (curSrc === src) { stopBgm(); manualStopAt = -1; return; }
     startBgm(src, btn);
+    armManualStop(btn);
   }
 
   /* ============================================================
-     自动配乐
-     按文档顺序收集所有 BGM 点和 stop music 点。
-     滚动到某点越过判定线时：BGM 点开始播放，stop 点停止。
-     和游戏的 play music / stop music 一致。
+     剧情音频引擎
+     按文档顺序收集 BGM 点、音效点、stop music 点。
+     - 自动模式：越过判定线就播对应的 BGM / 音效，遇到 stop 就停。
+     - 手动模式：点哪个播哪个；点过 BGM 之后，滚到后面的 stop 点仍会自动停，
+       保证手动读者也有"该停的地方会停"的体验。
      ============================================================ */
   var autoBtn = document.getElementById('bgm-auto');
   var autoOn = false;
   var cues = [];
   var lastCue = -1;
   var autoFrame = false;
+  var manualStopAt = -1;
+  var lastSfxAt = 0;
 
   function collectCues() {
-    var nodes = document.querySelectorAll('.toggle-bgm[data-src], .audio-stop-mark[data-stop]');
+    var nodes = document.querySelectorAll(
+      '.toggle-bgm[data-src], .toggle-sfx[data-src], .audio-stop-mark[data-stop]'
+    );
     cues = [];
     for (var i = 0; i < nodes.length; i++) {
       var n = nodes[i];
-      var isStop = n.hasAttribute('data-stop');
-      cues.push({ el: n, stop: isStop, src: isStop ? '' : n.getAttribute('data-src') });
+      var kind = n.hasAttribute('data-stop') ? 'stop'
+               : (n.classList.contains('toggle-bgm') ? 'bgm' : 'sfx');
+      cues.push({ el: n, kind: kind, src: kind === 'stop' ? '' : n.getAttribute('data-src') });
     }
     lastCue = -1;
+    manualStopAt = -1;
+  }
+
+  function cueIndexOf(el) {
+    for (var i = 0; i < cues.length; i++) {
+      if (cues[i].el === el) return i;
+    }
+    return -1;
+  }
+
+  /* 手动点了某首 BGM 之后，记住它后面最近的 stop 点 */
+  function armManualStop(btn) {
+    manualStopAt = -1;
+    if (autoOn) return;
+    var idx = cueIndexOf(btn);
+    if (idx < 0) return;
+    for (var k = idx + 1; k < cues.length; k++) {
+      if (cues[k].kind === 'stop') { manualStopAt = k; return; }
+      if (cues[k].kind === 'bgm') return;
+    }
   }
 
   function cueIndexAtLine() {
@@ -13973,23 +14003,52 @@
     while (i > 0 && guard++ <= cues.length &&
            cues[i].el.getBoundingClientRect().top > line) i--;
 
-    /* 第一个点还没到判定线 */
     if (cues[i].el.getBoundingClientRect().top > line) return -1;
     return i;
   }
 
+  function fireSfx(el) {
+    var now = Date.now();
+    if (now - lastSfxAt < 180) return;
+    lastSfxAt = now;
+    playSfx(el);
+  }
+
   function applyCue() {
     autoFrame = false;
-    if (!autoOn || !cues.length) return;
+    if (!cues.length) return;
 
     var i = cueIndexAtLine();
-    if (i === lastCue) return;
-    lastCue = i;
-    if (i < 0) return;
 
-    var c = cues[i];
-    if (c.stop) stopBgm();
-    else if (c.src) startBgm(c.src, c.el);
+    /* 手动模式：只处理用户点过之后遇到的停止点 */
+    if (!autoOn) {
+      if (i >= 0 && manualStopAt >= 0 && i >= manualStopAt) {
+        stopBgm();
+        manualStopAt = -1;
+      }
+      lastCue = i;
+      return;
+    }
+
+    if (i < 0) { lastCue = -1; return; }
+    if (i === lastCue) return;
+
+    var from = lastCue + 1;
+    if (lastCue < -1 || from > i) from = i;
+    var batch = i - from;
+
+    for (var k = from; k <= i; k++) {
+      var c = cues[k];
+      if (c.kind === 'stop') {
+        stopBgm();
+      } else if (c.kind === 'bgm') {
+        if (c.src) startBgm(c.src, c.el);
+      } else if (c.kind === 'sfx') {
+        /* 一次跨过太多点时不要补放一串音效 */
+        if (batch <= 2) fireSfx(c.el);
+      }
+    }
+    lastCue = i;
   }
 
   function scheduleCue() {
@@ -14000,15 +14059,23 @@
 
   function setAuto(on) {
     autoOn = !!on;
+    if (autoOn) manualStopAt = -1;
+
     if (autoBtn) {
-      autoBtn.textContent = autoOn ? '配乐 开' : '配乐 关';
       autoBtn.classList.toggle('is-on', autoOn);
       autoBtn.setAttribute('aria-pressed', autoOn ? 'true' : 'false');
+      var txt = autoBtn.querySelector('.rt-text');
+      if (txt) txt.textContent = autoOn ? '配乐 开' : '配乐';
     }
     try { localStorage.setItem('zato-bgm-auto', autoOn ? '1' : '0'); } catch (e) {}
 
-    if (autoOn) { lastCue = -2; scheduleCue(); }
-    else { stopBgm(); lastCue = -1; }
+    if (autoOn) {
+      lastCue = -999;
+      scheduleCue();
+    } else {
+      stopBgm();
+      lastCue = -1;
+    }
   }
 
   if (autoBtn) {
@@ -14017,48 +14084,18 @@
 
   collectCues();
   window.addEventListener('scroll', scheduleCue, { passive: true });
-  window.addEventListener('resize', function () { lastCue = -2; scheduleCue(); });
-  window.addEventListener('load', function () { lastCue = -2; scheduleCue(); });
+  window.addEventListener('resize', function () { lastCue = -999; scheduleCue(); });
+  window.addEventListener('load', function () { lastCue = -999; scheduleCue(); });
 
   /* 浏览器要求先有用户交互才允许出声：首次按下时补判定一次 */
   document.addEventListener('pointerdown', function retryOnce() {
     document.removeEventListener('pointerdown', retryOnce);
-    if (autoOn) { lastCue = -2; scheduleCue(); }
+    if (autoOn) { lastCue = -999; scheduleCue(); }
   });
 
   try {
     if (localStorage.getItem('zato-bgm-auto') === '1') setAuto(true);
   } catch (e) {}
-
-  function playSfx(btn) {
-    var src = btn.getAttribute('data-src');
-    if (!src) return;
-
-    if (!sfxPool[src]) {
-      var a = makeAudio(src, false);
-      a.addEventListener('ended', function () {
-        var b = a._btn;
-        if (!b) return;
-        b.textContent = b.getAttribute('data-label');
-        b.classList.remove('is-playing');
-      });
-      sfxPool[src] = a;
-    }
-    var s = sfxPool[src];
-    s._btn = btn;
-
-    try { s.currentTime = 0; } catch (e) {}
-    btn.textContent = '🔊 ...';
-    btn.classList.add('is-playing');
-
-    var p = s.play();
-    if (p && p.catch) {
-      p.catch(function () {
-        btn.textContent = btn.getAttribute('data-label');
-        btn.classList.remove('is-playing');
-      });
-    }
-  }
 
   document.addEventListener('click', function (e) {
     var t = e.target;
@@ -14092,22 +14129,53 @@
      字号调节
      ============================================================ */
   (function () {
-    var sel = document.getElementById('font-size-select');
-    if (!sel) return;
+    var group = document.querySelector('.rt-fonts');
+    if (!group) return;
+
+    var btns = [].slice.call(group.querySelectorAll('[data-font-size]'));
+    var thumb = group.querySelector('.rt-thumb');
+    if (!btns.length) return;
+
+    var SIZES = ['font-sm', 'font-md', 'font-lg', 'font-xl'];
+    var current = 'font-md';
 
     function apply(v) {
       document.documentElement.className =
         document.documentElement.className.replace(/font-\w+/g, '').trim() + ' ' + v;
     }
 
-    var saved = localStorage.getItem('zato-font-size') || 'font-md';
-    sel.value = saved;
-    apply(saved);
+    function mark(v) {
+      var idx = SIZES.indexOf(v);
+      if (idx < 0) idx = 1;
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle('is-active', i === idx);
+        btns[i].setAttribute('aria-pressed', i === idx ? 'true' : 'false');
+      }
+      if (thumb) {
+        var w = btns[0].offsetWidth || 34;
+        thumb.style.transform = 'translateX(' + (idx * w) + 'px)';
+      }
+    }
 
-    sel.addEventListener('change', function () {
-      apply(sel.value);
-      localStorage.setItem('zato-font-size', sel.value);
+    function pick(v) {
+      if (SIZES.indexOf(v) < 0) v = 'font-md';
+      current = v;
+      apply(v);
+      mark(v);
+      try { localStorage.setItem('zato-font-size', v); } catch (e) {}
+    }
+
+    var saved = 'font-md';
+    try { saved = localStorage.getItem('zato-font-size') || 'font-md'; } catch (e) {}
+    pick(saved);
+
+    group.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-font-size]') : null;
+      if (!b) return;
+      pick(b.getAttribute('data-font-size'));
     });
+
+    window.addEventListener('resize', function () { mark(current); });
   })();
 
   /* ============================================================
