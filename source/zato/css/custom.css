@@ -38,15 +38,16 @@
   padding-inline: calc(var(--spacing, 0.25rem) * 2);
 }
 
-.d-t {
-  padding: calc(var(--spacing, 0.25rem) * 4);
-  padding-top: calc(var(--spacing, 0.25rem) * 8);
-  overflow-wrap: break-word;
+
+/* 带立绘的对话框要建立块格式化上下文，
+   否则 float 的立绘不计入父高度，会穿出下边框。 */
+.d-f {
+  display: flow-root;
 }
 
 .d-fig {
   float: right;
-  margin: 0.5rem 0 0.5rem 1rem;
+  margin: 0 0 0.5rem 1rem;
 }
 
 .d-fig-el {
@@ -77,8 +78,9 @@
 }
 
 .ch {
-  max-width: 65ch;
+  max-width: calc(65ch + 2rem);
   margin-inline: auto;
+  padding-inline: 1rem;
 }
 
 /* 恢复阅读位置时临时关闭分段渲染：
@@ -127,9 +129,12 @@ figure.zato-img {
   display: block !important;
   float: none !important;
   box-sizing: border-box !important;
-  /* 用相对定位 + 固定 100vw，不依赖 auto 宽度和百分比外边距的换算 */
+  /* 先让左边缘落在包含块中心（left:50%），再左移自身宽度的一半。
+     只要求包含块在视口中水平居中，不要求它等于视口宽——
+     这样即使正文被收窄到 65ch（手机上约 296px），图也能铺满视口。 */
   position: relative !important;
-  left: calc(50% - 50vw) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
   width: 100vw !important;
   max-width: 100vw !important;
   min-width: 0 !important;
@@ -832,9 +837,6 @@ html {
   article .pt-8 {
     padding-top: 0.75rem !important;
   }
-  .d-t {
-    padding: 0.75rem !important;
-  }
   /* 角色标签 — 移动端改为自然流布局，作为文字上方标题，彻底消除重叠 */
   article .d {
     padding: 0.75rem !important;
@@ -985,9 +987,6 @@ html {
   article .pt-8 {
     padding-top: 0.6rem !important;
   }
-  .d-t {
-    padding: 0.6rem !important;
-  }
   /* 角色标签 — 小屏自然流布局，作为文字上方标题 */
   article .d {
     padding: 0.75rem !important;
@@ -1011,15 +1010,15 @@ html {
     width: auto;
   }
 
-  /* 内嵌立绘 — 小屏不浮动，居中显示 */
+  /* 内嵌立绘 — 小屏继续靠右浮动，只缩小尺寸。
+     改成居中独占一行会把文字挤到下面，读起来像错位。 */
   .d-fig {
-    float: none !important;
-    display: block !important;
-    margin: 0.5rem auto !important;
+    float: right !important;
+    margin: 0 0 0.4rem 0.6rem !important;
   }
   .d-fig-el {
-    width: 90px !important;
-    height: 90px !important;
+    width: 64px !important;
+    height: 64px !important;
   }
 
   .schedule-block-inner {
