@@ -9,10 +9,10 @@
   <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
   <!-- 资源预加载：关键 CSS 和字体优先下载，避免渲染阻塞 -->
   <link rel="preload" href="css/reference.css?v=1b308ad14b" as="style">
-  <link rel="preload" href="css/custom.css?v=fbc011d957" as="style">
+  <link rel="preload" href="css/custom.css?v=b85597a009" as="style">
   <link rel="preload" href="fonts/上图东观体-常规.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/reference.css?v=1b308ad14b">
-  <link rel="stylesheet" href="css/custom.css?v=fbc011d957">
+  <link rel="stylesheet" href="css/custom.css?v=b85597a009">
 </head>
 <body class="bg-bg text-fg dark">
   <div class="reader-tools" id="reader-tools">
@@ -13860,6 +13860,25 @@
   var curBgm = null;
   var curSrc = null;
 
+  /* 浏览器要求先有用户手势才允许出声。新开页面时 play() 会以
+     NotAllowedError 被拒，这里记住状态，等用户第一次点击再补播。 */
+  var autoBlocked = false;
+  var tapHint = null;
+
+  function showTapHint() {
+    if (!tapHint) {
+      tapHint = document.createElement('div');
+      tapHint.className = 'tap-hint';
+      tapHint.textContent = '♪ 点击页面任意处，播放当前位置的配乐';
+      document.body.appendChild(tapHint);
+    }
+    tapHint.classList.add('is-on');
+  }
+
+  function hideTapHint() {
+    if (tapHint) tapHint.classList.remove('is-on');
+  }
+
   var nowBox = document.getElementById('bgm-now');
   var nowTrack = nowBox ? nowBox.querySelector('.bgm-now-track') : null;
 
@@ -13930,9 +13949,17 @@
     }
 
     var p = a.play();
+    if (p && p.then) {
+      p.then(function () { autoBlocked = false; hideTapHint(); });
+    }
     if (p && p.catch) {
       p.catch(function (err) {
         if (curBgm === a) stopBgm();
+        if (err && err.name === 'NotAllowedError') {
+          autoBlocked = true;
+          if (autoOn) showTapHint();
+          return;
+        }
         if (!isRealAudioError(err, a)) return;
         if (nowBox) {
           nowBox.hidden = false;
@@ -14073,7 +14100,7 @@
     }
 
     if (i < 0) { lastCue = -1; return; }
-    if (i === lastCue) return;
+    if (i === lastCue && !autoBlocked) return;
 
     var from = lastCue + 1;
     if (lastCue < -1 || from > i) from = i;
@@ -14127,11 +14154,22 @@
   window.addEventListener('resize', function () { lastCue = -999; scheduleCue(); });
   window.addEventListener('load', function () { lastCue = -999; scheduleCue(); });
 
-  /* 浏览器要求先有用户交互才允许出声：首次按下时补判定一次 */
-  document.addEventListener('pointerdown', function retryOnce() {
-    document.removeEventListener('pointerdown', retryOnce);
-    if (autoOn) { lastCue = -999; scheduleCue(); }
+  /* 被自动播放策略拦下后，等用户第一次点击/按键马上补播 */
+  ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) {
+    document.addEventListener(ev, function () {
+      if (!autoOn) return;
+      if (!autoBlocked) return;
+      autoBlocked = false;
+      lastCue = -999;
+      scheduleCue();
+    }, true);
   });
+
+  /* 供阅读位置恢复后调用：位置变了，重新判定当前该放哪首 */
+  window.__zatoCueRefresh = function () {
+    lastCue = -999;
+    scheduleCue();
+  };
 
   try {
     if (localStorage.getItem('zato-bgm-auto') === '1') setAuto(true);
@@ -14562,6 +14600,7 @@
         root.classList.remove('zato-restoring');
         ready = true;
         showTip();
+        if (window.__zatoCueRefresh) window.__zatoCueRefresh();
       }, 260);
     }
 

@@ -648,6 +648,33 @@ html {
   .bgm-now-dot { animation: none; }
 }
 
+/* ========== 自动播放被拦时的提示 ========== */
+.tap-hint {
+  position: fixed;
+  left: 50%;
+  bottom: 112px;
+  z-index: 9996;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 198, 122, 0.3);
+  background: rgba(18, 18, 18, 0.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+  color: #e8c67a;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tap-hint.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
 /* ========== 阅读位置提示条 ========== */
 .read-resume {
   position: fixed;
