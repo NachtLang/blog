@@ -1,6 +1,16 @@
 /* 自定义CSS - 补充参考模板CSS中缺少的样式 */
 
 /* 字体定义 */
+/* 主字体：从 11.8MB 的 TTF 子集化成 1.2MB 的 WOFF2（2721 个字符）。
+   font-display: swap，先显示系统字体，加载完再替换，不阻塞首屏。 */
+@font-face {
+  font-family: 'ShangTuDongGuan';
+  src: url('../fonts/shangtu-subset.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ========== 对话 / 旁白（精简标记） ==========
    原来每行用 3-4 个 Tailwind 工具类，单是 class 属性就占 200 字节。
    6548 个对话框 + 5272 行旁白把 HTML 撑到 2.5MB，解析要 700ms+。
@@ -52,11 +62,23 @@
   text-align: start;
 }
 
-/* 章节容器：不要再加 content-visibility。
-   它会给章节加 contain: paint，把全宽背景图（100vw）裁成章节宽度。
-   性能靠图片 loading="lazy" 和 decoding="async" 保证。 */
+/* 章节容器：分区渲染 + 全宽。
+   content-visibility 会隐含 contain: paint，把子元素裁到章节盒子内。
+   所以章节本身设成 100vw，裁剪边界正好落在视口边缘，全宽背景图不被切；
+   正文用内层 .ch 收窄到 65ch，阅读宽度和以前一致。 */
 .chapter-section {
   display: block;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: 0 !important;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 6000px;
+}
+
+.ch {
+  max-width: 65ch;
+  margin-inline: auto;
 }
 
 /* 恢复阅读位置时临时关闭分段渲染：
