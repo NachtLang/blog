@@ -14397,6 +14397,53 @@
   })();
 
   /* ============================================================
+     背景图铺满兜底
+     量一次实际宽度：明显小于视口说明 CSS 被别的规则压住了，
+     直接写行内样式强制铺满。CSS 正常时这里什么都不做。
+     ============================================================ */
+  (function () {
+    var figs = [].slice.call(document.querySelectorAll('figure.zato-img'));
+    if (!figs.length) return;
+    var timer = null;
+
+    function fit() {
+      var vw = document.documentElement.clientWidth || window.innerWidth;
+      var fixed = 0;
+      for (var i = 0; i < figs.length; i++) {
+        var f = figs[i];
+        if (f.getBoundingClientRect().width >= vw * 0.9) continue;
+        f.style.setProperty('width', '100vw', 'important');
+        f.style.setProperty('max-width', '100vw', 'important');
+        f.style.setProperty('position', 'relative', 'important');
+        f.style.setProperty('left', 'calc(50% - 50vw)', 'important');
+        f.style.setProperty('margin-left', '0', 'important');
+        f.style.setProperty('margin-right', '0', 'important');
+        var img = f.querySelector('img');
+        if (img) {
+          img.style.setProperty('width', '100%', 'important');
+          img.style.setProperty('max-width', 'none', 'important');
+          img.style.setProperty('display', 'block', 'important');
+        }
+        fixed++;
+      }
+      if (fixed) console.info('[zato] 兜底修正了 ' + fixed + ' 张背景图宽度');
+    }
+
+    function schedule() {
+      clearTimeout(timer);
+      timer = setTimeout(fit, 200);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fit);
+    } else {
+      fit();
+    }
+    window.addEventListener('load', schedule);
+    window.addEventListener('resize', schedule);
+  })();
+
+  /* ============================================================
      阅读位置记忆
      用"第几章 + 章内比例"记录，不用绝对 scrollTop。
      因为 content-visibility 会让总高度在滚动中变化，绝对像素不可靠。
