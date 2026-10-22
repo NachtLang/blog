@@ -18,7 +18,7 @@
   <div class="reader-tools" id="reader-tools">
     <button type="button" class="rt-btn rt-music" id="bgm-auto" aria-pressed="false" title="自动配乐：滚到剧情处自动播放，滚到停止点自动关闭">
       <svg class="rt-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#ai:material-symbols:music-note"></use></svg>
-      <span class="rt-text">配乐</span>
+      <span class="rt-text">自动配乐</span>
     </button>
     <span class="rt-divider" aria-hidden="true"></span>
     <div class="rt-fonts" role="group" aria-label="正文字号">
@@ -13941,6 +13941,37 @@
     armManualStop(btn);
   }
 
+  function playSfx(btn) {
+    var src = btn.getAttribute('data-src');
+    if (!src) return;
+
+    var a = sfxPool[src];
+    if (!a) {
+      a = makeAudio(src, false);
+      a.addEventListener('ended', function () {
+        var b = a._btn;
+        if (!b) return;
+        b.textContent = b.getAttribute('data-label');
+        b.classList.remove('is-playing');
+      });
+      sfxPool[src] = a;
+    }
+    a._btn = btn;
+
+    try { a.currentTime = 0; } catch (e) {}
+
+    btn.textContent = '🔊 ...';
+    btn.classList.add('is-playing');
+
+    var p = a.play();
+    if (p && p.catch) {
+      p.catch(function () {
+        btn.textContent = btn.getAttribute('data-label');
+        btn.classList.remove('is-playing');
+      });
+    }
+  }
+
   /* ============================================================
      剧情音频引擎
      按文档顺序收集 BGM 点、音效点、stop music 点。
@@ -14064,8 +14095,6 @@
     if (autoBtn) {
       autoBtn.classList.toggle('is-on', autoOn);
       autoBtn.setAttribute('aria-pressed', autoOn ? 'true' : 'false');
-      var txt = autoBtn.querySelector('.rt-text');
-      if (txt) txt.textContent = autoOn ? '配乐 开' : '配乐';
     }
     try { localStorage.setItem('zato-bgm-auto', autoOn ? '1' : '0'); } catch (e) {}
 
@@ -14365,6 +14394,126 @@
 
     measure();
     paint();
+  })();
+
+  /* ============================================================
+     阅读位置记忆
+     用"第几章 + 章内比例"记录，不用绝对 scrollTop。
+     因为 content-visibility 会让总高度在滚动中变化，绝对像素不可靠。
+     ============================================================ */
+  (function () {
+    var KEY = 'zato-read-pos';
+    var heads = [].slice.call(document.querySelectorAll('article h2[id]'));
+    if (!heads.length) return;
+
+    var scroller = document.scrollingElement || document.documentElement;
+    var timer = null;
+    var ready = false;
+
+    function state() {
+      var y = scroller.scrollTop;
+      var k = -1;
+      for (var i = 0; i < heads.length; i++) {
+        if (heads[i].getBoundingClientRect().top + y <= y + 4) k = i;
+      }
+      if (k < 0) return null;
+      var top = heads[k].getBoundingClientRect().top + y;
+      var sec = heads[k].nextElementSibling;
+      var h = sec ? sec.getBoundingClientRect().height : 0;
+      var f = h > 0 ? (y - top) / h : 0;
+      return { k: k, f: Math.min(1, Math.max(0, f)), ts: Date.now() };
+    }
+
+    function save() {
+      if (!ready) return;
+      try {
+        var s = state();
+        if (s) localStorage.setItem(KEY, JSON.stringify(s));
+      } catch (e) {}
+    }
+
+    function scheduleSave() {
+      clearTimeout(timer);
+      timer = setTimeout(save, 700);
+    }
+
+    window.addEventListener('scroll', scheduleSave, { passive: true });
+    window.addEventListener('pagehide', save);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') save();
+    });
+
+    /* 提示条：告诉读者已经跳转，并给一个回开头的出口 */
+    var tip = null;
+    function showTip() {
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.className = 'read-resume';
+        tip.innerHTML = '<span>已回到上次阅读的位置</span><button type="button">回到开头</button>';
+        tip.querySelector('button').addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          hideTip();
+        });
+        document.body.appendChild(tip);
+      }
+      requestAnimationFrame(function () { tip.classList.add('is-on'); });
+      setTimeout(hideTip, 5200);
+    }
+    function hideTip() {
+      if (tip) tip.classList.remove('is-on');
+    }
+
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+
+    function apply() {
+      var head = heads[saved.k];
+      if (!head) return false;
+      var top = head.getBoundingClientRect().top + scroller.scrollTop;
+      var sec = head.nextElementSibling;
+      var h = sec ? sec.getBoundingClientRect().height : 0;
+      var target = top + (h > 0 ? saved.f * h : 0);
+      if (target < window.innerHeight * 0.6) return false;
+      window.scrollTo(0, target);
+      return true;
+    }
+
+    function boot() {
+      var ok = saved && typeof saved.k === 'number' &&
+               saved.k >= 0 && saved.k < heads.length && !location.hash;
+
+      if (!ok) { ready = true; return; }
+
+      var root = document.documentElement;
+
+      /* 靠后的章节前面压着几万像素内容，全是估算高度，必须量真实值 */
+      if (saved.k > 2) {
+        root.classList.add('zato-restoring');
+        void document.body.offsetHeight;
+      }
+
+      if (!apply()) {
+        root.classList.remove('zato-restoring');
+        ready = true;
+        return;
+      }
+
+      /* 再校正一次，然后交还给分段渲染 */
+      setTimeout(function () {
+        apply();
+        root.classList.remove('zato-restoring');
+        ready = true;
+        showTip();
+      }, 260);
+    }
+
+    /* 不要等 load：页面有 2500+ 张图，load 可能很晚，
+       脚本在 </body> 前执行，此时 h2 已经全部就位 */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
   })();
 })();
 </script>

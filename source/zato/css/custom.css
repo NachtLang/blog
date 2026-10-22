@@ -16,6 +16,12 @@
   contain-intrinsic-size: auto 800px;
 }
 
+/* 恢复阅读位置时临时关闭分段渲染：
+   content-visibility 下未渲染章节的高度是估算值，量不到真实位置 */
+html.zato-restoring .chapter-section {
+  content-visibility: visible !important;
+}
+
 /* 确保中文显示正确 */
 body {
   font-family: 'ShangTuDongGuan', 'Microsoft YaHei', 'PingFang SC', sans-serif;
@@ -634,6 +640,54 @@ html {
   .bgm-now-dot { animation: none; }
 }
 
+/* ========== 阅读位置提示条 ========== */
+.read-resume {
+  position: fixed;
+  left: 50%;
+  bottom: 72px;
+  z-index: 9996;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 198, 122, 0.28);
+  background: rgba(18, 18, 18, 0.9);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+  color: #e8c67a;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 10px) scale(0.97);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.read-resume.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  pointer-events: auto;
+}
+
+.read-resume button {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.25s ease;
+}
+
+.read-resume button:hover {
+  color: #e8c67a;
+}
+
 /* ========== 移动端适配 ========== */
 @media (max-width: 768px) {
   /* 基础排版 */
@@ -882,6 +936,15 @@ html {
     max-width: 58vw;
     padding: 5px 6px 5px 9px;
     font-size: 0.72rem;
+  }
+
+  .read-resume {
+    bottom: 64px;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  .read-resume button {
+    font-size: 11px;
   }
 
   /* 阅读工具栏：收紧 */
