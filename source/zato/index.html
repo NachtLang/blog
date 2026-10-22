@@ -14160,6 +14160,7 @@
       if (!autoOn) return;
       if (!autoBlocked) return;
       autoBlocked = false;
+      hideTapHint();
       lastCue = -999;
       scheduleCue();
     }, true);
