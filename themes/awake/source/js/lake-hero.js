@@ -244,10 +244,17 @@
 
   function render() {
     if (!state.ready) return;
-    var frame = Math.floor(state.time * 8) % 24;
-    var sx = (frame % 6) * 1280;
-    var sy = Math.floor(frame / 6) * 720;
-    videoCtx.drawImage(image, sx, sy, 1280, 720, 0, 0, videoCanvas.width, videoCanvas.height);
+    var pos = state.time * 4;
+    var f0 = Math.floor(pos) % 24;
+    var f1 = (f0 + 1) % 24;
+    var mix = pos - Math.floor(pos);
+    var x0 = (f0 % 6) * 1280, y0 = Math.floor(f0 / 6) * 720;
+    var x1 = (f1 % 6) * 1280, y1 = Math.floor(f1 / 6) * 720;
+    videoCtx.globalAlpha = 1;
+    videoCtx.drawImage(image, x0, y0, 1280, 720, 0, 0, videoCanvas.width, videoCanvas.height);
+    videoCtx.globalAlpha = mix;
+    videoCtx.drawImage(image, x1, y1, 1280, 720, 0, 0, videoCanvas.width, videoCanvas.height);
+    videoCtx.globalAlpha = 1;
     gl.bindTexture(gl.TEXTURE_2D, videoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoCanvas);
 
