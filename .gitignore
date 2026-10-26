@@ -10,3 +10,4 @@ source/music/audio/
 
 .vercel
 .env*
+source/zato/video/
