@@ -3311,7 +3311,7 @@ body.menu-open .menu-toggle span:last-child {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: var(--paper) url('/images/water-poster.jpg') center/cover;
+  background: var(--paper) url('/images/water-poster-halftone.jpg') center/cover;
 }
 
 .lake-stage__canvas {
@@ -6014,5 +6014,5 @@ body:not(.page-home) .main {
   }
 }
 
-.lake-stage.is-fallback{background:url('/images/water-poster.jpg') center/cover;}
+.lake-stage.is-fallback{background:url('/images/water-poster-halftone.jpg') center/cover;}
 .lake-stage.is-fallback::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(242,236,220,.42) 0 1.6px,transparent 2.1px) 0 0/7.2px 7.2px;mix-blend-mode:screen;}
