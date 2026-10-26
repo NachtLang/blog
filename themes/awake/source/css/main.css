@@ -3300,7 +3300,7 @@ body.menu-open .menu-toggle span:last-child {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: var(--paper) url('/images/water-poster-mobile-sea.jpg') center/cover;
+  background: var(--paper) url('/images/water-poster-mobile-1x.webp') center/cover;
 }
 
 .lake-stage__canvas {
@@ -6001,4 +6001,4 @@ body:not(.page-home) .main {
 
 
 
-@media (min-width:721px){.lake-stage{background:var(--paper) url('/images/water-poster-desktop-sea.jpg') center/cover;}}
+@media (min-width:721px){.lake-stage{background:var(--paper) url('/images/water-poster-desktop-1x.webp') center/cover;}}

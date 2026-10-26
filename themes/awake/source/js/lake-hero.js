@@ -85,7 +85,7 @@
     '  float glint = s.g;',
     '  vec3 paper = vec3(0.992, 0.988, 0.902);',
     '  vec3 tealInk = vec3(0.176, 0.451, 0.439);',
-    '  float cell = 6.2 * uDpr;',
+    '  float cell = 4.6 * uDpr;',
     '  float ang = 0.42;',
     '  mat2 rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));',
     '  vec2 hp = rot * (uv * uRes) / cell;',
@@ -146,8 +146,8 @@
   }
 
   var videoCanvas = document.createElement('canvas');
-  videoCanvas.width = 1280;
-  videoCanvas.height = 720;
+  videoCanvas.width = 2560;
+  videoCanvas.height = 1440;
   var videoCtx = videoCanvas.getContext('2d');
 
   var videoTex = gl.createTexture();
@@ -158,8 +158,8 @@
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-  var toneW = 1280;
-  var toneH = 720;
+  var toneW = 2560;
+  var toneH = 1440;
   var toneTex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, toneTex);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, toneW, toneH, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
@@ -228,7 +228,7 @@
 
   function resize() {
     var rect = stage.getBoundingClientRect();
-    var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var w = Math.max(1, Math.round(rect.width * dpr));
     var h = Math.max(1, Math.round(rect.height * dpr));
     var max = 2600000;
@@ -278,7 +278,7 @@
     gl.bindTexture(gl.TEXTURE_2D, toneTex);
     gl.uniform1i(uni2.tone, 0);
     gl.uniform2f(uni2.res, canvas.width, canvas.height);
-    gl.uniform1f(uni2.dpr, Math.min(window.devicePixelRatio || 1, 1.5));
+    gl.uniform1f(uni2.dpr, Math.min(window.devicePixelRatio || 1, 2));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
     if (!canvas.classList.contains('is-ready')) {
