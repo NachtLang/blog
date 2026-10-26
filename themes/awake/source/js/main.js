@@ -186,6 +186,7 @@
   var searchResults = $('[data-search-results]');
   var searchTrigger = $('[data-search-open]');
   var searchIndex = null;
+  var searchLoadFailed = false;
   var searchLoading = false;
   var searchActive = -1;
   var searchItems = [];
@@ -230,7 +231,12 @@
     searchActive = filtered.length ? 0 : -1;
 
     if (!filtered.length) {
-      searchResults.innerHTML = '<p class="search__empty">' + (items.length ? '没有找到相关内容。' : '搜索索引未就绪。') + '</p>';
+      var emptyText;
+      if (searchIndex === null) emptyText = '正在加载搜索索引…';
+      else if (searchLoadFailed) emptyText = '搜索索引加载失败。';
+      else if (!items.length) emptyText = '目前还没有文章。';
+      else emptyText = '没有找到相关内容。';
+      searchResults.innerHTML = '<p class="search__empty">' + emptyText + '</p>';
       return;
     }
 
@@ -252,12 +258,17 @@
     if (searchIndex || searchLoading) return;
     searchLoading = true;
     fetch('/search.json')
-      .then(function (res) { return res.ok ? res.json() : []; })
+      .then(function (res) {
+        if (!res.ok) throw new Error('search index unavailable');
+        return res.json();
+      })
       .then(function (data) {
+        searchLoadFailed = false;
         searchIndex = Array.isArray(data) ? data : [];
         if (searchEl && !searchEl.hidden) renderSearch(searchInput ? searchInput.value : '');
       })
       .catch(function () {
+        searchLoadFailed = true;
         searchIndex = [];
         if (searchEl && !searchEl.hidden) renderSearch(searchInput ? searchInput.value : '');
       })
