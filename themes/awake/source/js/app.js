@@ -397,7 +397,7 @@
   var last = 0;
   function frame(now) {
     requestAnimationFrame(frame);
-    if (!state.visible || document.hidden || !state.ready || reduceMotion) return;
+    if (!state.visible || document.hidden || !state.ready) return;
     var dt = Math.min(0.05, (now - last) / 1000 || 0.016);
     last = now;
     state.time += dt;
@@ -406,7 +406,7 @@
     render();
   }
 
-  if (!reduceMotion) requestAnimationFrame(frame);
+  requestAnimationFrame(frame);
 })();
 
 /* music-shelf.js */
