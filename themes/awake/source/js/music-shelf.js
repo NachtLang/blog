@@ -6,6 +6,9 @@
 (function () {
   'use strict';
 
+  if (window.__awakeShelfCleanup) {
+    try { window.__awakeShelfCleanup(); } catch (err) {}
+  }
   var shelf = document.querySelector('[data-music-shelf]');
   if (!shelf) return;
 
@@ -14,6 +17,7 @@
   var velocity = 0;
   var running = false;
   var lastTime = 0;
+  var shelfRaf = 0;
 
   function maxScroll() {
     return Math.max(0, shelf.scrollWidth - shelf.clientWidth);
@@ -66,14 +70,14 @@
       return;
     }
 
-    requestAnimationFrame(tick);
+    shelfRaf = requestAnimationFrame(tick);
   }
 
   function start() {
     if (running) return;
     running = true;
     lastTime = performance.now();
-    requestAnimationFrame(tick);
+    shelfRaf = requestAnimationFrame(tick);
   }
 
   function wheelDelta(event) {
@@ -113,6 +117,10 @@
   });
 
   updateRail();
+  window.__awakeShelfCleanup = function () {
+    running = false;
+    if (shelfRaf) cancelAnimationFrame(shelfRaf);
+  };
   window.addEventListener('resize', function () {
     position = Math.max(0, Math.min(maxScroll(), position));
     updateRail();

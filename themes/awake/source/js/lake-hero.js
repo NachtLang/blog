@@ -10,6 +10,14 @@
   var image = document.querySelector('[data-lake-texture]');
   if (!stage || !canvas || !image) return;
 
+  if (window.__awakeLakeCleanup) {
+    try { window.__awakeLakeCleanup(); } catch (err) {}
+  }
+  var lakeController = window.AbortController ? new AbortController() : null;
+  var lakeSignal = lakeController ? lakeController.signal : undefined;
+  var lakeRaf = 0;
+  var lakeObserver = null;
+
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var gl = null;
   try {
@@ -217,13 +225,13 @@
       addRipple(p.x, p.y, 0.10);
       state.lastMove = now;
     }
-  }, { passive: true });
+  }, { passive: true, signal: lakeSignal });
 
   window.addEventListener('pointerdown', function (event) {
     if (reduceMotion) return;
     var p = mapPointer(event);
     if (p) addRipple(p.x, p.y, 0.30);
-  }, { passive: true });
+  }, { passive: true, signal: lakeSignal });
 
   function resize() {
     var rect = stage.getBoundingClientRect();
@@ -324,25 +332,26 @@
 
   document.addEventListener('visibilitychange', function () {
     if (!document.hidden && !reduceMotion) render();
-  });
+  }, { signal: lakeSignal });
 
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
+    lakeObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         state.visible = entry.isIntersecting;
       });
-    }, { rootMargin: '80px' }).observe(stage);
+    }, { rootMargin: '80px' });
+    lakeObserver.observe(stage);
   }
 
   resize();
   window.addEventListener('resize', function () {
     resize();
     if (reduceMotion) render();
-  }, { passive: true });
+  }, { passive: true, signal: lakeSignal });
 
   var last = 0;
   function frame(now) {
-    requestAnimationFrame(frame);
+    lakeRaf = requestAnimationFrame(frame);
     if (!state.visible || document.hidden || !state.ready) return;
     var dt = Math.min(0.05, (now - last) / 1000 || 0.016);
     last = now;
@@ -352,5 +361,11 @@
     render();
   }
 
-  requestAnimationFrame(frame);
+  lakeRaf = requestAnimationFrame(frame);
+
+  window.__awakeLakeCleanup = function () {
+    if (lakeRaf) cancelAnimationFrame(lakeRaf);
+    if (lakeObserver) lakeObserver.disconnect();
+    if (lakeController) lakeController.abort();
+  };
 })();

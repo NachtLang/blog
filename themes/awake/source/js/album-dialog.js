@@ -383,10 +383,11 @@
   }
 
   /* ---------- 专辑按钮 ---------- */
-  document.querySelectorAll('[data-album-index]').forEach(function (button) {
-    button.addEventListener('click', function () {
-      openAlbum(Number(button.getAttribute('data-album-index')));
-    });
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-album-index]');
+    if (!button) return;
+    event.preventDefault();
+    openAlbum(Number(button.getAttribute('data-album-index')));
   });
 
   dialog.querySelectorAll('[data-album-close]').forEach(function (el) {

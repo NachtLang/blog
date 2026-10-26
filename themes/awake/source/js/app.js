@@ -60,6 +60,14 @@
   var image = document.querySelector('[data-lake-texture]');
   if (!stage || !canvas || !image) return;
 
+  if (window.__awakeLakeCleanup) {
+    try { window.__awakeLakeCleanup(); } catch (err) {}
+  }
+  var lakeController = window.AbortController ? new AbortController() : null;
+  var lakeSignal = lakeController ? lakeController.signal : undefined;
+  var lakeRaf = 0;
+  var lakeObserver = null;
+
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var gl = null;
   try {
@@ -267,13 +275,13 @@
       addRipple(p.x, p.y, 0.10);
       state.lastMove = now;
     }
-  }, { passive: true });
+  }, { passive: true, signal: lakeSignal });
 
   window.addEventListener('pointerdown', function (event) {
     if (reduceMotion) return;
     var p = mapPointer(event);
     if (p) addRipple(p.x, p.y, 0.30);
-  }, { passive: true });
+  }, { passive: true, signal: lakeSignal });
 
   function resize() {
     var rect = stage.getBoundingClientRect();
@@ -374,25 +382,26 @@
 
   document.addEventListener('visibilitychange', function () {
     if (!document.hidden && !reduceMotion) render();
-  });
+  }, { signal: lakeSignal });
 
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
+    lakeObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         state.visible = entry.isIntersecting;
       });
-    }, { rootMargin: '80px' }).observe(stage);
+    }, { rootMargin: '80px' });
+    lakeObserver.observe(stage);
   }
 
   resize();
   window.addEventListener('resize', function () {
     resize();
     if (reduceMotion) render();
-  }, { passive: true });
+  }, { passive: true, signal: lakeSignal });
 
   var last = 0;
   function frame(now) {
-    requestAnimationFrame(frame);
+    lakeRaf = requestAnimationFrame(frame);
     if (!state.visible || document.hidden || !state.ready) return;
     var dt = Math.min(0.05, (now - last) / 1000 || 0.016);
     last = now;
@@ -402,7 +411,13 @@
     render();
   }
 
-  requestAnimationFrame(frame);
+  lakeRaf = requestAnimationFrame(frame);
+
+  window.__awakeLakeCleanup = function () {
+    if (lakeRaf) cancelAnimationFrame(lakeRaf);
+    if (lakeObserver) lakeObserver.disconnect();
+    if (lakeController) lakeController.abort();
+  };
 })();
 
 /* music-shelf.js */
@@ -414,6 +429,9 @@
 (function () {
   'use strict';
 
+  if (window.__awakeShelfCleanup) {
+    try { window.__awakeShelfCleanup(); } catch (err) {}
+  }
   var shelf = document.querySelector('[data-music-shelf]');
   if (!shelf) return;
 
@@ -422,6 +440,7 @@
   var velocity = 0;
   var running = false;
   var lastTime = 0;
+  var shelfRaf = 0;
 
   function maxScroll() {
     return Math.max(0, shelf.scrollWidth - shelf.clientWidth);
@@ -474,14 +493,14 @@
       return;
     }
 
-    requestAnimationFrame(tick);
+    shelfRaf = requestAnimationFrame(tick);
   }
 
   function start() {
     if (running) return;
     running = true;
     lastTime = performance.now();
-    requestAnimationFrame(tick);
+    shelfRaf = requestAnimationFrame(tick);
   }
 
   function wheelDelta(event) {
@@ -521,6 +540,10 @@
   });
 
   updateRail();
+  window.__awakeShelfCleanup = function () {
+    running = false;
+    if (shelfRaf) cancelAnimationFrame(shelfRaf);
+  };
   window.addEventListener('resize', function () {
     position = Math.max(0, Math.min(maxScroll(), position));
     updateRail();
@@ -913,10 +936,11 @@
   }
 
   /* ---------- 专辑按钮 ---------- */
-  document.querySelectorAll('[data-album-index]').forEach(function (button) {
-    button.addEventListener('click', function () {
-      openAlbum(Number(button.getAttribute('data-album-index')));
-    });
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-album-index]');
+    if (!button) return;
+    event.preventDefault();
+    openAlbum(Number(button.getAttribute('data-album-index')));
   });
 
   dialog.querySelectorAll('[data-album-close]').forEach(function (el) {
@@ -1077,73 +1101,6 @@
 
   updateMini();
   restoreState();
-})();
-
-/* page-transition.js */
-/* ============================================================
-   AwaKeSpace · 页面切换
-   同站链接离开时先落下纸面，再进入新页
-   ============================================================ */
-(function () {
-  'use strict';
-
-  if (!window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (!window.history || !window.history.pushState) return;
-
-  var veil = document.querySelector('[data-page-veil]');
-  if (!veil) return;
-
-  var leaving = false;
-
-  function isPlainClick(event) {
-    return event.button === 0 &&
-      !event.metaKey &&
-      !event.ctrlKey &&
-      !event.shiftKey &&
-      !event.altKey;
-  }
-
-  function isSameDocument(url) {
-    return url.pathname === window.location.pathname && url.search === window.location.search;
-  }
-
-  document.addEventListener('click', function (event) {
-    if (leaving || event.defaultPrevented || !isPlainClick(event)) return;
-
-    var link = event.target.closest('a[href]');
-    if (!link) return;
-    if (link.target && link.target !== '_self') return;
-    if (link.hasAttribute('download')) return;
-
-    var href = link.getAttribute('href');
-    if (!href || href.charAt(0) === '#') return;
-    if (/^(mailto:|tel:|javascript:)/i.test(href)) return;
-
-    var url;
-    try {
-      url = new URL(link.href, window.location.href);
-    } catch (err) {
-      return;
-    }
-
-    if (url.origin !== window.location.origin) return;
-    if (isSameDocument(url)) return;
-
-    event.preventDefault();
-    leaving = true;
-    veil.classList.add('is-leaving');
-    veil.setAttribute('aria-hidden', 'false');
-
-    window.setTimeout(function () {
-      window.location.href = url.href;
-    }, 430);
-  });
-
-  window.addEventListener('pageshow', function () {
-    leaving = false;
-    veil.classList.remove('is-leaving');
-    veil.setAttribute('aria-hidden', 'true');
-  });
 })();
 
 /* page-smooth.js */

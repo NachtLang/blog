@@ -6002,3 +6002,6 @@ body:not(.page-home) .main {
 
 
 @media (min-width:721px){.lake-stage{background:var(--paper) url('/images/water-poster-desktop-1x.webp') center/cover;}}
+
+.pjax-zato{display:block;width:100%;height:calc(100dvh - 78px);border:0;background:var(--paper);}
+body.page-zato .main{padding:0;}
