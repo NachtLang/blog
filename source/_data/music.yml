@@ -1,0 +1,94 @@
+# 首页音乐展柜
+# 每张专辑：封面图、标题、音乐人、年份
+# 封面建议 1:1，放在 source/music/covers/ 下，用 /music/covers/xxx.jpg 引用
+# 想放自己的音乐时，替换 cover/title/artist/year 即可
+# 《昔日我曾苍老》音频文件放在 sourcehttps://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/，按 01.mp3 ~ 20.mp3 命名
+# 声音碎片《昔日我曾苍老》二十周年精选集
+
+- cover: /music/covers/sound-fragment-past.jpg
+  title: 昔日我曾苍老
+  artist: 声音碎片
+  year: 2021
+  note: 二十周年精选集
+  official: https://music.163.com/album?id=127969622
+  tracks:
+    - title: 优美的低于生活 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/01.flac
+    - title: 把光芒洒向开阔之地 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/02.flac
+    - title: 通过愤怒之门 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/03.flac
+    - title: 黑白电影 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/04.flac
+    - title: 世界是噪音的花园 (Instrumental)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/05.flac
+    - title: 在流逝之外 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/06.mp3
+    - title: 顺流而下 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/07.mp3
+    - title: 致我的迷茫兄弟
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/08.mp3
+    - title: 神游
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/09.mp3
+    - title: 情歌而已 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/10.mp3
+    - title: 星光照亮你回家的路 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/11.mp3
+    - title: 骑手的悲伤之歌 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/12.mp3
+    - title: 在一起 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/13.mp3
+    - title: 在时代华美的盛宴上 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/14.mp3
+    - title: 送流水 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/15.mp3
+    - title: 从现在开始 (2021 Version)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/16.mp3
+    - title: 陌生城市的早晨 (2019 Live)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/17.mp3
+    - title: 西南之南
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/18.mp3
+    - title: 天边一朵云 (Unplugged)
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/19.mp3
+    - title: 黄金时代
+      audio: https://pub-d3086448e9b34734ad382a1c03323bd4.r2.dev/sound-fragment/20.mp3
+
+- cover: /music/covers/01.jpg
+  title: Untitled 01
+  artist: AwaKeSpace
+  year: 2026
+
+- cover: /music/covers/02.jpg
+  title: Untitled 02
+  artist: AwaKeSpace
+  year: 2026
+
+- cover: /music/covers/03.jpg
+  title: Untitled 03
+  artist: AwaKeSpace
+  year: 2026
+
+- cover: /music/covers/04.jpg
+  title: Untitled 04
+  artist: AwaKeSpace
+  year: 2026
+
+- cover: /music/covers/05.jpg
+  title: Untitled 05
+  artist: AwaKeSpace
+  year: 2026
+
+- cover: /music/covers/06.jpg
+  title: Untitled 06
+  artist: AwaKeSpace
+  year: 2026
+
+- cover: /music/covers/07.jpg
+  title: Untitled 07
+  artist: AwaKeSpace
+  year: 2026
+
+- cover: /music/covers/08.jpg
+  title: Untitled 08
+  artist: AwaKeSpace
+  year: 2026

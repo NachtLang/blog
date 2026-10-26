@@ -3,4 +3,7 @@ public/
 db.json
 .deploy_git/
 source/_data/caches/
+.preview/
 *.bak
+screenshots/
+source/music/audio/

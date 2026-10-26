@@ -1,0 +1,29 @@
+<%
+  var labelMap = {
+    page: 'PAGE / 页面',
+    photos: 'PHOTOS / 照片',
+    tags: 'INDEX / 标签',
+    categories: 'INDEX / 分类'
+  };
+  var path = String(page.path || '');
+  var eyebrow = labelMap[page.layout] || 'PAGE / 页面';
+  if (path.indexOf('about/') === 0) eyebrow = 'ABOUT / 关于';
+%>
+<section class="page-hero">
+  <%- partial('_partial/water-stage') %>
+  <div class="page-hero__inner">
+    <p class="page-hero__eyebrow"><a href="<%= url_for('/') %>">AwaKeSpace</a><span class="sep"></span><%= eyebrow %></p>
+    <h1 class="page-hero__title"><%= page.title %></h1>
+    <% if (page.description) { %>
+      <div class="page-hero__meta"><span><%= page.description %></span></div>
+    <% } %>
+  </div>
+</section>
+
+<div class="post-layout post-layout--single">
+  <div class="post-layout__inner">
+    <article class="post-content">
+      <%- page.content %>
+    </article>
+  </div>
+</div>

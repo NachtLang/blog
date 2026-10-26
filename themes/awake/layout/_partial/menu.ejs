@@ -1,0 +1,28 @@
+<div class="menu" id="site-menu" data-menu aria-hidden="true">
+  <div class="menu__backdrop" data-menu-close></div>
+  <div class="menu__panel">
+    <div class="menu__head">
+      <span class="menu__eyebrow"><%= theme.site_name %></span>
+      <button class="menu__close" type="button" data-menu-close aria-label="关闭菜单">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="menu__nav" aria-label="移动端导航">
+      <%
+        var menuItems = [
+          { id: 'post', title: '文章', url: '/' },
+          { id: 'music', title: '音乐', url: '/music/' },
+          { id: 'zato', title: 'ZATO', url: '/zato/' },
+          { id: 'about', title: '关于', url: '/about/' }
+        ];
+      %>
+      <% menuItems.forEach(function (item, i) { %>
+        <a class="menu__link<%= awake_nav_active(item.id) ? ' is-active' : '' %>" href="<%= url_for(item.url) %>" style="--i:<%= i %>">
+          <span class="menu__title"><%= item.title %></span>
+        </a>
+      <% }); %>
+    </nav>
+  </div>
+</div>

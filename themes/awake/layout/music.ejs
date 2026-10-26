@@ -1,0 +1,32 @@
+<%
+  var music = site.data.music || [];
+%>
+<section class="music-hero">
+  <div class="music-hero__stage"><%- partial('_partial/lake-stage') %></div>
+  <div class="music-hero__inner">
+    <p class="music-hero__eyebrow">MUSIC / 音乐</p>
+    <h1 class="music-hero__title">音乐</h1>
+    <p class="music-hero__meta"><%= music.length %> 张专辑</p>
+  </div>
+</section>
+
+<section class="music-page">
+  <div class="wrap">
+    <div class="music-grid">
+      <% music.forEach(function (album, i) { %>
+        <button class="album album--grid" type="button" data-album-index="<%= i %>" aria-haspopup="dialog" aria-label="打开专辑：<%= album.title %>">
+          <span class="album__cover">
+            <img src="<%= url_for(album.cover) %>" alt="<%= album.title %>" width="600" height="600" loading="lazy" decoding="async">
+          </span>
+          <span class="album__meta">
+            <span class="album__index">0<%= i + 1 %></span>
+            <span class="album__title"><%= album.title %></span>
+            <span class="album__artist"><%= album.artist %> · <%= album.year %></span>
+          </span>
+        </button>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+

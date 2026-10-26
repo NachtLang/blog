@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<%
+  var kind = 'page';
+  if (is_home()) kind = 'home';
+  else if (is_post()) kind = 'post';
+  else if (is_archive()) kind = 'archive';
+  else if (is_tag()) kind = 'tag';
+  else if (is_category()) kind = 'category';
+  else if (page.layout === 'photos') kind = 'photos';
+  else if (page.layout === 'tags') kind = 'tags-index';
+  else if (page.layout === 'categories') kind = 'categories-index';
+  else if (page.layout === '404') kind = 'notfound';
+%>
+<head>
+  <%- partial('_partial/head') %>
+</head>
+<body class="page-<%= kind %>">
+  <script>
+    (function () {
+      var b = document.body;
+      b.classList.add('has-js');
+      if (b.classList.contains('page-home') && (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+        b.classList.add('is-intro');
+      }
+      window.setTimeout(function () {
+        if (b.classList.contains('is-intro') && !b.classList.contains('is-intro-done')) {
+          b.classList.remove('is-intro', 'is-intro-swap');
+          b.classList.add('is-intro-done');
+        }
+      }, 4000);
+    })();
+  </script>
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="page-veil" data-page-veil aria-hidden="true"><span><%= theme.site_name %></span></div>
+  <div class="cursor-glow" data-cursor-glow aria-hidden="true"></div>
+
+  <%- partial('_partial/nav') %>
+  <%- partial('_partial/menu') %>
+  <%- partial('_partial/read-progress') %>
+
+  <main id="main" class="main">
+    <%- body %>
+  </main>
+
+  <%- partial('_partial/footer') %>
+  <%- partial('_partial/album-dialog', { music: site.data.music }) %>
+  <div class="mini-player" data-mini-player hidden aria-label="正在播放">
+    <button class="mini-player__cover" type="button" data-mini-open aria-label="打开当前专辑"><img data-mini-cover alt=""></button>
+    <div class="mini-player__info">
+      <span class="mini-player__eyebrow">NOW PLAYING</span>
+      <span class="mini-player__title" data-mini-title></span>
+      <span class="mini-player__artist" data-mini-artist></span>
+    </div>
+    <div class="mini-player__controls">
+      <button type="button" data-mini-prev aria-label="上一首">⏮</button>
+      <button type="button" data-mini-toggle aria-label="暂停">❚❚</button>
+      <button type="button" data-mini-next aria-label="下一首">⏭</button>
+    </div>
+    <button class="mini-player__close" type="button" data-mini-close aria-label="关闭播放器">×</button>
+    <div class="mini-player__progress" aria-hidden="true"><span data-mini-fill></span></div>
+  </div>
+  <%- partial('_partial/lightbox') %>
+  <%- partial('_partial/search') %>
+  <%- partial('_partial/scripts') %>
+</body>
+</html>

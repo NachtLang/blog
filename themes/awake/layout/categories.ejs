@@ -1,0 +1,25 @@
+<%
+  var categories = site.categories.toArray().sort(function (a, b) { return b.length - a.length; });
+%>
+<section class="page-hero">
+  <%- partial('_partial/water-stage') %>
+  <div class="page-hero__inner">
+    <p class="page-hero__eyebrow"><a href="<%= url_for('/') %>">AwaKeSpace</a><span class="sep"></span>INDEX / 分类</p>
+    <h1 class="page-hero__title">分类</h1>
+    <div class="page-hero__meta"><span><%= categories.length %> 个分类</span></div>
+  </div>
+</section>
+
+<div class="index-page">
+  <div class="index-page__inner">
+    <div class="taxonomy-grid">
+      <% categories.forEach(function (cat) { %>
+        <a class="taxonomy-card" href="<%= url_for(cat.path) %>">
+          <span class="taxonomy-card__title"><%= cat.name %></span>
+          <span class="taxonomy-card__count"><%= cat.length %> 篇 ↗</span>
+        </a>
+      <% }); %>
+    </div>
+    <% if (!categories.length) { %><p class="writing-note">还没有分类。</p><% } %>
+  </div>
+</div>

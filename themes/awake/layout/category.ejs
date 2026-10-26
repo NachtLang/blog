@@ -1,0 +1,27 @@
+<%
+  var posts = (page.posts ? page.posts.toArray() : []);
+  var name = page.category || '';
+%>
+<section class="page-hero">
+  <%- partial('_partial/water-stage') %>
+  <div class="page-hero__inner">
+    <p class="page-hero__eyebrow"><a href="<%= url_for('/') %>">AwaKeSpace</a><span class="sep"></span>CATEGORY / 分类</p>
+    <h1 class="page-hero__title"><%= name %></h1>
+    <div class="page-hero__meta"><span>共 <%= posts.length %> 篇</span></div>
+  </div>
+</section>
+
+<div class="index-page">
+  <div class="index-page__inner">
+    <% posts.forEach(function (post) { %>
+      <a class="archive-row" href="<%= url_for(post.path) %>">
+        <span class="archive-row__date"><%= awake_date(post.date) %></span>
+        <span class="archive-row__title"><%= post.title %></span>
+        <span class="archive-row__arrow" aria-hidden="true">↗</span>
+      </a>
+    <% }); %>
+    <% if (!posts.length) { %><p class="writing-note">这里还没有内容。</p><% } %>
+    <%- partial('_partial/pagination') %>
+    <p style="margin-top:36px"><a class="link-arrow" href="<%= url_for('/') %>">← 回到水面</a></p>
+  </div>
+</div>

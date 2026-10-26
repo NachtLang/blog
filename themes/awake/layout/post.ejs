@@ -1,0 +1,41 @@
+<%
+  var post = page;
+  var cats = (post.categories && post.categories.toArray()) || [];
+  var tags = (post.tags && post.tags.toArray()) || [];
+  var kicker = cats.length ? cats[0].name : '文章';
+%>
+<section class="essay-hero">
+  <div class="essay-hero__stage"><%- partial('_partial/lake-stage') %></div>
+  <div class="essay-hero__inner">
+    <p class="essay__eyebrow">
+      <span><%= kicker %></span>
+      <span class="essay__slash" aria-hidden="true">/</span>
+      <time datetime="<%= post.date.toISOString() %>"><%= awake_date(post.date) %></time>
+    </p>
+    <h1 class="essay__title"><%= post.title %></h1>
+    <p class="essay__info">
+      <span><%= awake_read_time(post.content) %> 分钟阅读</span>
+      <span class="essay__dot" aria-hidden="true">·</span>
+      <span><%= awake_word_count(post.content) %> 字</span>
+    </p>
+  </div>
+</section>
+
+<article class="essay essay--post">
+  <div class="essay__body">
+    <article class="post-content" id="post-content">
+      <%- post.content %>
+    </article>
+  </div>
+
+  <footer class="essay__foot">
+    <% if (tags.length) { %>
+      <div class="essay__tags">
+        <% tags.forEach(function (tag) { %>
+          <a href="<%= url_for(tag.path) %>">#<%= tag.name %></a>
+        <% }); %>
+      </div>
+    <% } %>
+    <a class="essay__back" href="<%= url_for('/') %>">← 返回首页</a>
+  </footer>
+</article>

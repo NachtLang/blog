@@ -1,0 +1,54 @@
+<div class="album-dialog" data-album-dialog hidden>
+  <div class="album-dialog__scrim" data-album-close></div>
+  <section class="album-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="album-dialog-title" tabindex="-1">
+    <button class="album-dialog__close" type="button" data-album-close aria-label="关闭">×</button>
+
+    <aside class="album-dialog__side">
+      <div class="album-dialog__stage">
+        <div class="vinyl" aria-hidden="true">
+          <div class="vinyl__disc">
+            <span class="vinyl__label">
+              <span class="vinyl__label-title" data-vinyl-title></span>
+              <span class="vinyl__label-artist" data-vinyl-artist></span>
+            </span>
+          </div>
+        </div>
+        <div class="album-dialog__cover"><img data-album-cover alt=""></div>
+      </div>
+      <div class="album-dialog__side-meta">
+        <span data-album-side-artist></span>
+        <span data-album-side-year></span>
+      </div>
+
+      <div class="album-player" data-album-player>
+        <audio data-album-audio preload="none"></audio>
+        <div class="album-player__row">
+          <button class="album-player__toggle" type="button" data-player-toggle aria-label="播放">▶</button>
+          <div class="album-player__now">
+            <span class="album-player__title" data-player-title>选择一首歌</span>
+            <span class="album-player__time" data-player-time>0:00 / 0:00</span>
+          </div>
+        </div>
+        <div class="album-player__seek" data-player-seek role="slider" tabindex="0" aria-label="播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="album-player__seek-rail"></span>
+          <span class="album-player__seek-fill" data-seek-fill></span>
+          <span class="album-player__seek-thumb" data-seek-thumb></span>
+        </div>
+        <p class="album-player__status" data-album-status></p>
+      </div>
+
+      <a class="album-dialog__official" data-album-official target="_blank" rel="noopener noreferrer">在网易云音乐打开 ↗</a>
+    </aside>
+
+    <div class="album-dialog__main">
+      <header class="album-dialog__header">
+        <p class="album-dialog__eyebrow">ALBUM / <span data-album-year></span></p>
+        <h2 class="album-dialog__title" id="album-dialog-title" data-album-title></h2>
+        <p class="album-dialog__meta" data-album-meta></p>
+        <p class="album-dialog__note" data-album-note></p>
+      </header>
+      <ol class="album-tracks" data-album-tracks></ol>
+    </div>
+  </section>
+</div>
+<script type="application/json" data-album-data><%- JSON.stringify(music).replace(/</g, '\\u003c') %></script>

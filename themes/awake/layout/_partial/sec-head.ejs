@@ -1,0 +1,20 @@
+<%
+  var idx = typeof index !== 'undefined' ? index : '';
+  var title = typeof title !== 'undefined' ? title : '';
+  var label = typeof label !== 'undefined' ? label : '';
+  var note = typeof note !== 'undefined' ? note : '';
+  var link = typeof link !== 'undefined' ? link : '';
+  var linkText = typeof linkText !== 'undefined' ? linkText : '';
+%>
+<header class="sec-head" data-reveal>
+  <div class="sec-head__top">
+    <span class="sec-head__index"><%= idx %></span>
+    <h2 class="sec-head__title"><%= title %></h2>
+    <% if (label) { %><span class="sec-head__label"><%= label %></span><% } %>
+    <% if (link) { %>
+      <a class="sec-head__link" href="<%= url_for(link) %>"><%= linkText %><span aria-hidden="true">↗</span></a>
+    <% } %>
+  </div>
+  <span class="sec-head__rule"></span>
+  <% if (note) { %><p class="sec-head__note"><%= note %></p><% } %>
+</header>

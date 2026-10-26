@@ -1,0 +1,22 @@
+<%
+  var tags = site.tags.toArray().sort(function (a, b) { return b.length - a.length; });
+%>
+<section class="page-hero">
+  <%- partial('_partial/water-stage') %>
+  <div class="page-hero__inner">
+    <p class="page-hero__eyebrow"><a href="<%= url_for('/') %>">AwaKeSpace</a><span class="sep"></span>INDEX / 标签</p>
+    <h1 class="page-hero__title">标签</h1>
+    <div class="page-hero__meta"><span><%= tags.length %> 个标签</span><span class="dot" aria-hidden="true"></span><span>按出现次数排列</span></div>
+  </div>
+</section>
+
+<div class="index-page">
+  <div class="index-page__inner">
+    <div class="taxonomy-cloud">
+      <% tags.forEach(function (tag) { %>
+        <a class="taxonomy-chip" href="<%= url_for(tag.path) %>"><%= tag.name %><span class="taxonomy-chip__count"><%= tag.length %></span></a>
+      <% }); %>
+    </div>
+    <% if (!tags.length) { %><p class="writing-note">还没有标签。</p><% } %>
+  </div>
+</div>

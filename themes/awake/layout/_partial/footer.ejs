@@ -1,0 +1,20 @@
+<footer class="footer">
+  <div class="footer__bg" aria-hidden="true"></div>
+  <div class="footer__inner">
+    <div class="footer__top">
+      <nav class="footer__links" aria-label="页脚">
+        <a href="<%= url_for('/') %>">文章</a>
+        <a href="<%= url_for('/music/') %>">音乐</a>
+        <a href="<%= url_for('/zato/') %>">ZATO</a>
+        <% if (site.posts.length) { %><a href="<%= url_for('/archives/') %>">归档</a><% } %>
+        <a href="<%= url_for('/about/') %>">关于</a>
+      </nav>
+    </div>
+    <div class="footer__word" aria-hidden="true"><%= theme.site_name %></div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> <%= theme.site_name %></span>
+      <span class="footer__credit"><%= theme.footer.credit %></span>
+      <a href="#main" data-to-top aria-label="回到顶部">↑</a>
+    </div>
+  </div>
+</footer>

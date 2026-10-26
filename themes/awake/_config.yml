@@ -1,0 +1,85 @@
+# AwaKeSpace 主题配置
+# 海报式排版 / 实时水面 / 奶油色油墨
+
+version: '5.9.4'
+site_name: AwaKeSpace
+author: AwaKe
+tagline: 个人博客
+
+nav:
+  - title: 文章
+    url: /
+    id: post
+  - title: 音乐
+    url: /music/
+    id: music
+  - title: ZATO
+    url: /zato/
+    id: zato
+  - title: 关于
+    url: /about/
+    id: about
+
+hero:
+  issue: AWAKE SPACE / PERSONAL BLOG / 2026
+  word: AWAKE
+  suffix: SPACE
+  line: 写代码，也写东西。
+  rail:
+    - title: 文章
+      url: '#writing'
+      index: '01'
+    - title: 音乐
+      url: '#music'
+      index: '02'
+    - title: ZATO
+      url: '#zato'
+      index: '03'
+    - title: 关于
+      url: '#about'
+      index: '04'
+
+sections:
+  writing:
+    index: '01'
+    title: 文章
+    label: WRITING
+    note: 长文与随笔。
+  photos:
+    index: '02'
+    title: 照片
+    label: PHOTOS
+    note: 随手拍的一些瞬间。
+  zato:
+    index: '03'
+    title: 项目
+    label: PROJECT
+    note: 一部视觉小说的中文电子书。
+  about:
+    index: '04'
+    title: 关于
+    label: ABOUT
+    note: 这个站点在做什么。
+
+zato:
+  title: ZATO
+  subtitle: I Love the World and Everything In It
+  description: 一部视觉小说的中文电子书。我从游戏脚本里把它解析出来，做成了可以直接往下读的网页版。原版在 Steam 免费，如果你读得下去，请去玩原版。
+  cover: /images/zato-home.jpg
+  hero: /zato/images/library_hero.jpg
+  stats:
+    - 11 章
+    - 全程配乐
+    - 免费阅读
+  cta: 进入 ZATO
+
+about:
+  lead: 这里不放广告，不追热点，不做信息流。
+  body: 放文章、照片，和一些做出来的东西。写代码，也写东西。做过一些逆向和工具，喜欢能跑起来的作品。
+
+footer:
+  note: 本站由 Hexo 构建，静态部署。
+  credit: 水面影像 VFX FOOTAGE / CC BY 3.0 · 内页水面摄影 Stiller Beobachter / CC BY-SA 3.0
+
+photos:
+  count: 6

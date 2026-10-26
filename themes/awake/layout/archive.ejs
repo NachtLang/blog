@@ -1,0 +1,40 @@
+<%
+  var posts = (page.posts ? page.posts.toArray() : site.posts.toArray());
+  var groups = {};
+  posts.forEach(function (post) {
+    var y = new Date(post.date).getFullYear();
+    if (!groups[y]) groups[y] = [];
+    groups[y].push(post);
+  });
+  var years = Object.keys(groups).sort(function (a, b) { return b - a; });
+%>
+<section class="page-hero">
+  <%- partial('_partial/water-stage') %>
+  <div class="page-hero__inner">
+    <p class="page-hero__eyebrow"><a href="<%= url_for('/') %>">AwaKeSpace</a><span class="sep"></span>ARCHIVE / 归档</p>
+    <h1 class="page-hero__title">内容归档</h1>
+    <div class="page-hero__meta">
+      <span>共 <%= posts.length %> 篇</span><span class="dot" aria-hidden="true"></span><span>按时间排列。</span>
+    </div>
+  </div>
+</section>
+
+<div class="index-page">
+  <div class="index-page__inner">
+    <% years.forEach(function (year) { %>
+      <div class="archive-year">
+        <span class="archive-year__num"><%= year %></span>
+        <span class="archive-year__count"><%= groups[year].length %> 篇</span>
+      </div>
+      <% groups[year].forEach(function (post) { %>
+        <a class="archive-row" href="<%= url_for(post.path) %>">
+          <span class="archive-row__date"><%= awake_date(post.date) %></span>
+          <span class="archive-row__title"><%= post.title %></span>
+          <span class="archive-row__arrow" aria-hidden="true">↗</span>
+        </a>
+      <% }); %>
+    <% }); %>
+    <% if (!posts.length) { %><p class="writing-note">水面上还很安静。</p><% } %>
+    <%- partial('_partial/pagination') %>
+  </div>
+</div>

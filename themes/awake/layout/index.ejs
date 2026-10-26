@@ -1,0 +1,98 @@
+<%
+  var posts = page.posts ? page.posts.toArray() : site.posts.toArray();
+  var hasPosts = posts.length > 0;
+  var featured = posts[0] || null;
+  var rest = posts.slice(1, 6);
+  var music = site.data.music || [];
+  var zato = theme.zato || {};
+%>
+<section class="hero hero--lake">
+  <%- partial('_partial/lake-stage') %>
+  <div class="hero-intro" data-hero-intro aria-hidden="true">
+    <span class="hero-intro__welcome">Welcome</span>
+  </div>
+  <div class="hero__inner">
+    <h1 class="hero__mark"><a href="<%= url_for('/') %>" aria-label="<%= theme.site_name %>"><%= theme.site_name %></a></h1>
+    <a class="hero__scroll" href="#<%= hasPosts ? 'writing' : 'music' %>" aria-label="向下滚动">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v15M5.5 12.5 12 19l6.5-6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<% if (hasPosts) { %>
+<section class="section section--paper section--writing" id="writing">
+  <span class="section__num" aria-hidden="true">01</span>
+  <div class="wrap">
+    <h2 class="visually-hidden">文章</h2>
+    <p class="section__caption">文章</p>
+
+    <% if (featured) { %>
+      <a class="feature" href="<%= url_for(featured.path) %>">
+        <h3 class="feature__title"><%= featured.title %></h3>
+        <span class="feature__date"><%= awake_date(featured.date) %></span>
+        <span class="feature__arrow" aria-hidden="true">→</span>
+      </a>
+    <% } else { %>
+      <p class="section__empty">还没有文章。</p>
+    <% } %>
+
+    <div class="post-list">
+      <% rest.forEach(function (post, i) { %>
+        <a class="post-row" href="<%= url_for(post.path) %>">
+          <span class="post-row__num">0<%= i + 2 %></span>
+          <span class="post-row__title"><%= post.title %></span>
+          <span class="post-row__date"><%= awake_date(post.date) %></span>
+          <span class="post-row__arrow" aria-hidden="true">↗</span>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="section section--paper section--music" id="music">
+  <span class="section__num" aria-hidden="true"><%= hasPosts ? '02' : '01' %></span>
+  <div class="wrap">
+    <h2 class="visually-hidden">音乐</h2>
+    <p class="section__caption">音乐</p>
+    <div class="music-shelf" data-music-shelf tabindex="0" role="region" aria-label="音乐展柜，使用鼠标滚轮左右浏览">
+      <div class="music-shelf__track">
+        <% music.forEach(function (album, i) { %>
+          <button class="album" type="button" data-album-index="<%= i %>" aria-haspopup="dialog" aria-label="打开专辑：<%= album.title %>">
+            <span class="album__cover">
+              <img src="<%= url_for(album.cover) %>" alt="<%= album.title %>" width="600" height="600" loading="lazy" decoding="async">
+            </span>
+            <span class="album__meta">
+              <span class="album__index">0<%= i + 1 %></span>
+              <span class="album__title"><%= album.title %></span>
+              <span class="album__artist"><%= album.artist %> · <%= album.year %></span>
+            </span>
+          </button>
+        <% }); %>
+      </div>
+    </div>
+    <div class="music-shelf__rail" aria-hidden="true"><span data-music-progress></span></div>
+    <a class="music-all" href="<%= url_for('/music/') %>">全部音乐 <span aria-hidden="true">↗</span></a>
+  </div>
+</section>
+
+
+
+
+<section class="section section--dark section--zato" id="zato">
+  <div class="zato__bg" style="background-image:url('<%= url_for(zato.hero) %>')" aria-hidden="true"></div>
+  <div class="zato__veil" aria-hidden="true"></div>
+  <span class="section__num section__num--dark" aria-hidden="true"><%= hasPosts ? '03' : '02' %></span>
+  <div class="wrap">
+    <h2 class="visually-hidden">项目</h2>
+    <div class="zato-link">
+      <a class="zato__word" href="<%= url_for('/zato/') %>"><%= zato.title %><span class="zato__dot">.</span></a>
+      <div class="zato__copy">
+        <p class="zato__text">1986年，苏联，一座不存在的小镇，一个女孩的故事。</p>
+        <a class="zato__enter" href="<%= url_for('/zato/') %>">进入 ZATO <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- partial('_partial/pagination') %>

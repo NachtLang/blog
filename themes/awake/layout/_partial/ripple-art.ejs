@@ -1,0 +1,78 @@
+<%
+  var artId = typeof artId !== 'undefined' ? artId : 'ra';
+  var variant = typeof variant !== 'undefined' ? variant : '';
+  var seed = typeof seed !== 'undefined' ? seed : 9;
+%>
+<div class="ripple-art <%= variant %>" aria-hidden="true">
+  <svg class="ripple-art__svg" viewBox="0 0 640 640" preserveAspectRatio="xMidYMid slice" focusable="false">
+    <defs>
+      <radialGradient id="<%= artId %>-glow" cx="52%" cy="44%" r="62%">
+        <stop offset="0%" stop-color="#d6f8e9" stop-opacity=".62"/>
+        <stop offset="26%" stop-color="#62b18f" stop-opacity=".3"/>
+        <stop offset="62%" stop-color="#123528" stop-opacity=".14"/>
+        <stop offset="100%" stop-color="#04120e" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="<%= artId %>-orb" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#f4fff9" stop-opacity=".95"/>
+        <stop offset="40%" stop-color="#9adbbd" stop-opacity=".4"/>
+        <stop offset="100%" stop-color="#9adbbd" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="<%= artId %>-beam" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#d8fdec" stop-opacity=".24"/>
+        <stop offset="70%" stop-color="#7ec8a9" stop-opacity=".05"/>
+        <stop offset="100%" stop-color="#0a241c" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="<%= artId %>-sheen" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#bff0da" stop-opacity=".12"/>
+        <stop offset="45%" stop-color="#bff0da" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#04120e" stop-opacity=".35"/>
+      </linearGradient>
+      <filter id="<%= artId %>-warp" x="-25%" y="-25%" width="150%" height="150%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.0045 0.0075" numOctaves="2" seed="<%= seed %>" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="56" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="<%= artId %>-soft" x="-45%" y="-45%" width="190%" height="190%">
+        <feGaussianBlur stdDeviation="30"/>
+      </filter>
+    </defs>
+
+    <rect width="640" height="640" fill="#04120e"/>
+    <ellipse cx="330" cy="284" rx="300" ry="250" fill="url(#<%= artId %>-glow)" filter="url(#<%= artId %>-soft)"/>
+    <path d="M286 0 L372 0 L470 640 L206 640 Z" fill="url(#<%= artId %>-beam)" opacity=".38"/>
+
+    <g class="ripple-art__rings" filter="url(#<%= artId %>-warp)" fill="none" stroke="#a9e4c9" transform="rotate(-7 330 284)">
+      <ellipse cx="330" cy="284" rx="30" ry="13" stroke-opacity=".85"/>
+      <ellipse cx="330" cy="284" rx="62" ry="27" stroke-opacity=".74"/>
+      <ellipse cx="330" cy="284" rx="98" ry="43" stroke-opacity=".62"/>
+      <ellipse cx="330" cy="284" rx="138" ry="61" stroke-opacity=".52"/>
+      <ellipse cx="330" cy="284" rx="182" ry="80" stroke-opacity=".42"/>
+      <ellipse cx="330" cy="284" rx="230" ry="101" stroke-opacity=".33"/>
+      <ellipse cx="330" cy="284" rx="282" ry="124" stroke-opacity=".25"/>
+      <ellipse cx="330" cy="284" rx="338" ry="149" stroke-opacity=".18"/>
+      <ellipse cx="330" cy="284" rx="398" ry="175" stroke-opacity=".12"/>
+      <ellipse cx="330" cy="284" rx="462" ry="203" stroke-opacity=".07"/>
+    </g>
+
+    <g class="ripple-art__caustics" filter="url(#<%= artId %>-warp)" fill="none" stroke="#dff8ed" stroke-linecap="round">
+      <path d="M120 196c58-30 128-28 186 4s118 36 176 6" stroke-opacity=".2" stroke-width="1.4"/>
+      <path d="M86 360c74 26 152 22 222-8s140-30 208 0" stroke-opacity=".13" stroke-width="1.2"/>
+      <path d="M196 486c44 16 96 12 138-10s88-24 132-4" stroke-opacity=".1" stroke-width="1"/>
+      <path d="M250 120c30-14 64-12 92 4" stroke-opacity=".16" stroke-width="1"/>
+    </g>
+
+    <g class="ripple-art__specks" fill="#eafff7">
+      <circle cx="252" cy="228" r="1.6" opacity=".8"/>
+      <circle cx="396" cy="246" r="1.2" opacity=".55"/>
+      <circle cx="342" cy="338" r="1.8" opacity=".7"/>
+      <circle cx="440" cy="320" r="1" opacity=".45"/>
+      <circle cx="212" cy="330" r="1.1" opacity=".4"/>
+      <circle cx="306" cy="192" r="1" opacity=".5"/>
+      <circle cx="420" cy="384" r="1.3" opacity=".35"/>
+      <circle cx="286" cy="404" r="1" opacity=".3"/>
+    </g>
+
+    <circle class="ripple-art__orb" cx="330" cy="284" r="86" fill="url(#<%= artId %>-orb)"/>
+    <circle class="ripple-art__dot" cx="330" cy="284" r="3.6" fill="#f2fff9"/>
+    <rect width="640" height="640" fill="url(#<%= artId %>-sheen)"/>
+  </svg>
+</div>

@@ -1,0 +1,47 @@
+<%
+  var siteName = theme.site_name || config.title || 'AwaKeSpace';
+  var tagline = theme.tagline || config.description || '';
+  var pageTitle;
+  if (is_home()) {
+    pageTitle = siteName + ' · ' + tagline;
+  } else if (page.title) {
+    pageTitle = page.title + ' · ' + siteName;
+  } else if (is_archive()) {
+    pageTitle = '内容归档 · ' + siteName;
+  } else if (is_tag() && page.tag) {
+    pageTitle = '标签：' + page.tag + ' · ' + siteName;
+  } else if (is_category() && page.category) {
+    pageTitle = '分类：' + page.category + ' · ' + siteName;
+  } else {
+    pageTitle = siteName;
+  }
+  var description = page.description || tagline;
+  if (!page.description && (is_post() || page.excerpt)) {
+    var rawExcerpt = awake_excerpt(page.content || page.excerpt || '', 100);
+    if (rawExcerpt) description = rawExcerpt;
+  }
+  if (!page.description && is_archive()) description = '按时间整理的全部文章。';
+  if (!page.description && is_tag() && page.tag) description = '标签「' + page.tag + '」下的文章。';
+  if (!page.description && is_category() && page.category) description = '分类「' + page.category + '」下的文章。';
+  var canonical = (config.url || '').replace(/\/+$/, '') + '/' + (is_home() ? '' : String(page.path || '').replace(/^\/+/, ''));
+  var origin = (config.url || '').replace(/\/+$/, '');
+%>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title><%= pageTitle %></title>
+<meta name="description" content="<%= description %>">
+<link rel="canonical" href="<%= canonical %>">
+<meta name="theme-color" content="#fdfce6">
+<meta name="color-scheme" content="light only">
+<meta property="og:type" content="<%= is_post() ? 'article' : 'website' %>">
+<meta property="og:title" content="<%= pageTitle %>">
+<meta property="og:description" content="<%= description %>">
+<meta property="og:url" content="<%= canonical %>">
+<meta property="og:site_name" content="<%= siteName %>">
+<meta property="og:image" content="<%= origin %>/images/water-fallback.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="<%= url_for('/images/favicon.svg') %>" type="image/svg+xml">
+<link rel="preload" as="image" href="<%= url_for('/images/water-hero.jpg') %>" fetchpriority="high">
+<link rel="stylesheet" href="<%= url_for('/css/main.css') %>?v=<%= theme.version %>">
+<noscript><style>[data-reveal]{opacity:1 !important;transform:none !important}.cursor-glow{display:none}.water-canvas{display:none}</style></noscript>
+<%- meta_generator() %>

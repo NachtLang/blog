@@ -5,7 +5,7 @@
 # Site
 title: AwaKeSpace
 subtitle: ''
-description: 一个安静的个人博客
+description: 个人博客
 keywords:
 author: AwaKe
 language: zh-CN
@@ -96,7 +96,7 @@ exclude:
 ignore:
 
 # Extensions
-theme: stellar
+theme: awake
 
 # Deployment
 deploy:

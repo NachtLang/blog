@@ -1,0 +1,43 @@
+<%
+  var photos = (site.data.photos || []).slice();
+  photos.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+  function photoDate(d) {
+    var date = new Date(d);
+    if (isNaN(date.getTime())) return '';
+    return date.getFullYear() + '.' + String(date.getMonth() + 1).padStart(2, '0');
+  }
+%>
+<section class="page-hero">
+  <%- partial('_partial/water-stage') %>
+  <div class="page-hero__inner">
+    <p class="page-hero__eyebrow"><a href="<%= url_for('/') %>">AwaKeSpace</a><span class="sep"></span>PHOTOS / 照片</p>
+    <h1 class="page-hero__title">照片</h1>
+    <div class="page-hero__meta"><span><%= photos.length %> 张</span><span class="dot" aria-hidden="true"></span><span>随手拍的一些瞬间。</span></div>
+  </div>
+</section>
+
+<div class="index-page">
+  <div class="index-page__inner" style="max-width:1120px">
+    <div class="photo-wall">
+      <% photos.forEach(function (photo, i) { %>
+        <button
+          class="photo-wall__item"
+          type="button"
+          id="photo-<%= i + 1 %>"
+          data-photo="<%= url_for(photo.src) %>"
+          data-title="<%= photo.title || '' %>"
+          data-caption="<%= (photo.title || '无题') + (photo.location ? ' · ' + photo.location : '') + (photo.date ? ' · ' + photoDate(photo.date) : '') %>"
+          style="--i:<%= i %>"
+          aria-label="查看照片：<%= photo.title || '无题' %>"
+        >
+          <img src="<%= url_for(photo.src) %>" alt="<%= photo.title || '' %>"<% if (photo.w && photo.h) { %> width="<%= photo.w %>" height="<%= photo.h %>"<% } %> loading="lazy" decoding="async">
+          <span class="photo-wall__cap">
+            <em><%= photo.title || '无题' %></em>
+            <span><%= photo.location ? photo.location + ' · ' : '' %><%= photoDate(photo.date) %></span>
+          </span>
+        </button>
+      <% }); %>
+    </div>
+    <% if (!photos.length) { %><p class="writing-note">还没有照片。</p><% } %>
+  </div>
+</div>
