@@ -85,7 +85,7 @@
     '  float glint = s.g;',
     '  vec3 paper = vec3(0.992, 0.988, 0.902);',
     '  vec3 tealInk = vec3(0.176, 0.451, 0.439);',
-    '  float cell = 7.2 * uDpr;',
+    '  float cell = 6.2 * uDpr;',
     '  float ang = 0.42;',
     '  mat2 rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));',
     '  vec2 hp = rot * (uv * uRes) / cell;',
@@ -146,8 +146,8 @@
   }
 
   var videoCanvas = document.createElement('canvas');
-  videoCanvas.width = 640;
-  videoCanvas.height = 360;
+  videoCanvas.width = 1280;
+  videoCanvas.height = 720;
   var videoCtx = videoCanvas.getContext('2d');
 
   var videoTex = gl.createTexture();
@@ -158,8 +158,8 @@
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-  var toneW = 640;
-  var toneH = 360;
+  var toneW = 1280;
+  var toneH = 720;
   var toneTex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, toneTex);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, toneW, toneH, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
