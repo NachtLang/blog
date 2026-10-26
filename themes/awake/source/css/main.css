@@ -3336,11 +3336,7 @@ body.menu-open .menu-toggle span:last-child {
   pointer-events: none;
 }
 
-.lake-stage.is-fallback {
-  background:
-    radial-gradient(circle, rgba(18, 65, 67, 0.18) 0 1px, transparent 1.4px) 0 0 / 7px 7px,
-    var(--paper);
-}
+.lake-stage.is-fallback {}
 
 .lake-stage.is-fallback .lake-stage__canvas {
   display: none;
@@ -6015,6 +6011,5 @@ body:not(.page-home) .main {
 }
 
 
-.lake-stage.is-fallback::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(242,236,220,.42) 0 1.6px,transparent 2.1px) 0 0/7.2px 7.2px;mix-blend-mode:screen;}
 
 @media (min-width:721px){.lake-stage{background:var(--paper) url('/images/water-poster-desktop.jpg') center/cover;}}
