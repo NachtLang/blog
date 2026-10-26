@@ -1452,12 +1452,22 @@
     searchActive = filtered.length ? 0 : -1;
 
     if (!filtered.length) {
-      var emptyText;
-      if (searchIndex === null) emptyText = '正在加载搜索索引…';
-      else if (searchLoadFailed) emptyText = '搜索索引加载失败。';
-      else if (!items.length) emptyText = '目前还没有文章。';
-      else emptyText = '没有找到相关内容。';
-      searchResults.innerHTML = '<p class="search__empty">' + emptyText + '</p>';
+      var emptyTitle;
+      var emptyNote;
+      if (searchIndex === null) {
+        emptyTitle = '正在加载';
+        emptyNote = '正在读取站内文章索引。';
+      } else if (searchLoadFailed) {
+        emptyTitle = '索引加载失败';
+        emptyNote = '请稍后刷新页面重试。';
+      } else if (!items.length) {
+        emptyTitle = '目前还没有文章';
+        emptyNote = '发布第一篇文章后，这里会出现搜索结果。';
+      } else {
+        emptyTitle = '没有找到相关内容';
+        emptyNote = '换一个关键词，或从标签和分类重新找。';
+      }
+      searchResults.innerHTML = '<div class="search__empty"><span class="search__empty-mark" aria-hidden="true"></span><p class="search__empty-title">' + emptyTitle + '</p><p class="search__empty-note">' + emptyNote + '</p></div>';
       return;
     }
 
