@@ -7,7 +7,7 @@
 
   var stage = document.querySelector('[data-lake-stage]');
   var canvas = document.querySelector('[data-lake-canvas]');
-  var image = document.querySelector('[data-lake-image]');
+  var image = document.querySelector('[data-lake-sprite]');
   if (!stage || !canvas || !image) return;
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -244,7 +244,10 @@
 
   function render() {
     if (!state.ready) return;
-    videoCtx.drawImage(image, 0, 0, videoCanvas.width, videoCanvas.height);
+    var f = Math.floor(state.time * 5) % 25;
+    var sx = (f % 5) * 400;
+    var sy = Math.floor(f / 5) * 225;
+    videoCtx.drawImage(image, sx, sy, 400, 225, 0, 0, videoCanvas.width, videoCanvas.height);
     gl.bindTexture(gl.TEXTURE_2D, videoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoCanvas);
 
