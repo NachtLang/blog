@@ -6021,3 +6021,6 @@ body:not(.page-home) .main {
     backdrop-filter: blur(22px) saturate(0.9);
   }
 }
+
+.lake-stage.is-fallback{background:url('/images/water-fallback.jpg') center/cover;}
+.lake-stage.is-fallback::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(242,236,220,.42) 0 1.6px,transparent 2.1px) 0 0/7.2px 7.2px;mix-blend-mode:screen;}

@@ -286,17 +286,30 @@
     }
   }
 
+  var fallbackTimer = null;
+
+  function useFallback() {
+    if (stage.classList.contains('is-fallback')) return;
+    if (fallbackTimer) window.clearTimeout(fallbackTimer);
+    stage.classList.add('is-fallback');
+    stage.classList.remove('is-ready');
+    video.pause();
+  }
+
   function play() {
     if (video.paused) {
       var promise = video.play();
-      if (promise && promise.catch) promise.catch(function () {});
+      if (promise && promise.catch) promise.catch(function () { useFallback(); });
     }
   }
 
   video.muted = true;
   video.loop = true;
   video.playbackRate = 1.55;
+  video.addEventListener('error', useFallback);
+
   video.addEventListener('loadeddata', function () {
+    if (fallbackTimer) window.clearTimeout(fallbackTimer);
     state.ready = true;
     if (reduceMotion) {
       video.pause();
@@ -312,6 +325,10 @@
       play();
     }
   });
+  fallbackTimer = window.setTimeout(function () {
+    if (!state.ready) useFallback();
+  }, 4500);
+
   play();
 
   document.addEventListener('visibilitychange', function () {
