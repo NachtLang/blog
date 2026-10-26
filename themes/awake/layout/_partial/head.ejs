@@ -43,6 +43,7 @@
 <link rel="icon" href="<%= url_for('/images/favicon.svg') %>" type="image/svg+xml">
 <link rel="preload" as="image" href="<%= url_for('/images/water-poster-mobile.jpg') %>" media="(max-width:720px)" fetchpriority="high">
 <link rel="preload" as="image" href="<%= url_for('/images/water-poster-desktop.jpg') %>" media="(min-width:721px)" fetchpriority="high">
+<link rel="preload" as="script" href="<%= url_for('/js/app.js') %>?v=<%= theme.version %>">
 <link rel="stylesheet" href="<%= url_for('/css/main.css') %>?v=<%= theme.version %>">
 <% if (is_home()) { %>
 <script>document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){var l=document.createElement('link');l.rel='stylesheet';l.href='<%= url_for('/css/font-dongguan.css') %>?v=<%= theme.version %>';document.head.appendChild(l);},900);});</script>
