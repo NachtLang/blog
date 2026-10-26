@@ -289,13 +289,9 @@
     }
   }
 
-  var fallbackTimer = null;
   var imagePoll = null;
 
   function useFallback() {
-    if (stage.classList.contains('is-fallback')) return;
-    if (fallbackTimer) window.clearTimeout(fallbackTimer);
-    if (imagePoll) window.clearInterval(imagePoll);
     stage.classList.add('is-fallback');
     stage.classList.remove('is-ready');
   }
@@ -303,30 +299,22 @@
   function markReady() {
     if (state.ready) return;
     if (!image.naturalWidth) return;
-    if (fallbackTimer) window.clearTimeout(fallbackTimer);
     if (imagePoll) window.clearInterval(imagePoll);
     state.ready = true;
     stage.classList.remove('is-fallback');
     render();
   }
 
-  fallbackTimer = window.setTimeout(function () {
-    if (!state.ready) useFallback();
-  }, 5000);
-
+  image.addEventListener('load', markReady);
   image.addEventListener('error', useFallback);
   var imageSrc = image.getAttribute('data-src');
-  if (imageSrc) window.setTimeout(function () { image.src = imageSrc; }, 350);
+  if (imageSrc) window.setTimeout(function () { image.src = imageSrc; }, 300);
   if (image.naturalWidth) {
     markReady();
   } else {
-    image.addEventListener('load', markReady);
-    if (image.decode) {
-      image.decode().then(markReady).catch(function () {});
-    }
     imagePoll = window.setInterval(function () {
       if (image.naturalWidth) markReady();
-    }, 100);
+    }, 150);
   }
 
   document.addEventListener('visibilitychange', function () {
