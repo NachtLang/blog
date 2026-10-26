@@ -158,7 +158,7 @@
       veil.classList.add('is-leaving');
       veil.setAttribute('aria-hidden', 'false');
     }
-    main.innerHTML = '<iframe class="pjax-zato" src="' + url.href + '" title="ZATO"></iframe>';
+    main.innerHTML = '<div class="pjax-zato-shell"><iframe class="pjax-zato" src="' + url.href + '" title="ZATO"></iframe><a class="pjax-zato-open" href="' + url.href + '" target="_blank" rel="noopener">直接打开 ZATO <span aria-hidden="true">↗</span></a></div>';
     document.body.className = 'page-zato has-js is-loaded is-pjax';
     document.title = 'ZATO · AwaKeSpace';
     document.querySelectorAll('.nav__link').forEach(function (link) {
