@@ -15,6 +15,36 @@
   var pageCache = new Map();
   var active = false;
   var currentRequest = 0;
+  var zatoInFrame = false;
+  var zatoWasPlaying = false;
+
+  function parentAudio() {
+    return document.querySelector('[data-album-audio]');
+  }
+
+  function pauseParentForZato() {
+    var audio = parentAudio();
+    if (!audio) return;
+    if (!audio.paused) {
+      zatoWasPlaying = true;
+      audio.pause();
+    } else {
+      zatoWasPlaying = false;
+    }
+    zatoInFrame = true;
+  }
+
+  function resumeParentAfterZato() {
+    if (!zatoInFrame) return;
+    zatoInFrame = false;
+    if (!zatoWasPlaying) return;
+    var audio = parentAudio();
+    zatoWasPlaying = false;
+    if (audio) {
+      var promise = audio.play();
+      if (promise && promise.catch) promise.catch(function () {});
+    }
+  }
 
   function isPlainClick(event) {
     return event.button === 0 &&
@@ -158,7 +188,8 @@
       veil.classList.add('is-leaving');
       veil.setAttribute('aria-hidden', 'false');
     }
-    main.innerHTML = '<div class="pjax-zato-shell"><iframe class="pjax-zato" src="' + url.href + '" title="ZATO"></iframe><a class="pjax-zato-open" href="' + url.href + '" target="_blank" rel="noopener">直接打开 ZATO <span aria-hidden="true">↗</span></a></div>';
+    pauseParentForZato();
+    main.innerHTML = '<div class="pjax-zato-shell"><iframe class="pjax-zato" src="' + url.href + '" title="ZATO"></iframe><a class="pjax-zato-open" href="' + url.href + '" data-no-pjax data-zato-direct>直接打开 ZATO <span aria-hidden="true">→</span></a></div>';
     document.body.className = 'page-zato has-js is-loaded is-pjax';
     document.title = 'ZATO · AwaKeSpace';
     document.querySelectorAll('.nav__link').forEach(function (link) {
@@ -174,6 +205,7 @@
 
   function navigate(url, replace) {
     if (active) return;
+    resumeParentAfterZato();
     active = true;
     var requestId = ++currentRequest;
     if (veil) {
@@ -196,6 +228,11 @@
   }
 
   document.addEventListener('click', function (event) {
+    var direct = event.target.closest('[data-zato-direct]');
+    if (direct) {
+      var audio = parentAudio();
+      if (audio && !audio.paused) audio.pause();
+    }
     if (active || event.defaultPrevented || !isPlainClick(event)) return;
     var link = event.target.closest('a[href]');
     if (!isPjaxLink(link)) return;
