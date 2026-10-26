@@ -57,7 +57,7 @@
 
   var stage = document.querySelector('[data-lake-stage]');
   var canvas = document.querySelector('[data-lake-canvas]');
-  var image = document.querySelector('[data-lake-sprite]');
+  var image = document.querySelector('[data-lake-texture]');
   if (!stage || !canvas || !image) return;
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -100,6 +100,7 @@
     '    float env = exp(-dist * 6.5) * exp(-age * 1.2);',
     '    warp += normalize(d) * (cos(phase) * env * r.w * 0.0105);',
     '  }',
+    '  warp += vec2(sin(uv.y * 12.0 + uTime * 0.55) * 0.0060 + sin(uv.x * 7.0 - uTime * 0.33) * 0.0030, cos(uv.x * 10.0 + uTime * 0.47) * 0.0055 + cos(uv.y * 8.0 - uTime * 0.29) * 0.0030);',
     '  vec2 t = uv - 0.5;',
     '  float va = 16.0 / 9.0;',
     '  if (uAspect > va) t.y *= va / uAspect; else t.x *= uAspect / va;',
@@ -294,10 +295,7 @@
 
   function render() {
     if (!state.ready) return;
-    var f = Math.floor(state.time * 5) % 25;
-    var sx = (f % 5) * 400;
-    var sy = Math.floor(f / 5) * 225;
-    videoCtx.drawImage(image, sx, sy, 400, 225, 0, 0, videoCanvas.width, videoCanvas.height);
+    videoCtx.drawImage(image, 0, 0, videoCanvas.width, videoCanvas.height);
     gl.bindTexture(gl.TEXTURE_2D, videoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoCanvas);
 
