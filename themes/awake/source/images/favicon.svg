@@ -1,7 +1,4 @@
 ﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="14" fill="#072a2b"/>
-  <g fill="none" stroke="#f2ecdc" stroke-width="4" stroke-linecap="round">
-    <path d="M12 26c8-12 16-12 24 0s16 12 24 0"/>
-    <path d="M12 42c8-12 16-12 24 0s16 12 24 0" opacity=".55"/>
-  </g>
+  <text x="32" y="47" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="46" font-weight="400" fill="#f2ecdc">A</text>
 </svg>

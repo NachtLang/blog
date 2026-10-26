@@ -240,25 +240,14 @@ textarea {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 0;
   justify-self: start;
   color: currentColor;
 }
 
-.brand__mark {
-  width: 20px;
-  height: 20px;
-  color: var(--sea-4);
-  transition: transform 0.7s var(--ease);
-}
 
-.nav.is-scrolled .brand__mark {
-  color: var(--sea-3);
-}
 
-.brand:hover .brand__mark {
-  transform: translateX(2px);
-}
+
 
 .brand__name {
   font-family: var(--sans);
