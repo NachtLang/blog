@@ -50,19 +50,6 @@
     '    float env = exp(-dist * 6.5) * exp(-age * 1.2);',
     '    warp += normalize(d) * (cos(phase) * env * r.w * 0.0105);',
     '  }',
-    '  vec2 auv = vec2(uv.x * uAspect, uv.y);',
-    '  vec2 D1 = normalize(vec2(0.82, 0.57));',
-    '  vec2 D2 = normalize(vec2(-0.47, 0.88));',
-    '  float swellWarp = sin(dot(uv, vec2(4.3, 2.1)) + uTime * 0.22) * 0.35;',
-    '  float phase1 = dot(auv, D1) * 4.8 - uTime * 0.85 + swellWarp * 0.35;',
-    '  float phase2 = dot(auv, D2) * 9.0 - uTime * 1.25 + 1.4 + swellWarp * 0.45;',
-    '  float phase3 = dot(auv, D1) * 3.2 + uTime * 0.55 + 2.1;',
-    '  float wave1 = sin(phase1);',
-    '  float wave2 = sin(phase2) * 0.28;',
-    '  float wave3 = sin(phase3) * 0.22;',
-    '  float crest = (wave1 + wave2 + wave3) * (0.72 + 0.28 * sin(uTime * 0.33));',
-    '  vec2 slope = D1 * cos(phase1) * 4.8 + D2 * cos(phase2) * 2.52 + D1 * cos(phase3) * 0.70;',
-    '  warp += slope * 0.00020;',
     '  vec2 t = uv - 0.5;',
     '  float va = 16.0 / 9.0;',
     '  if (uAspect > va) t.y *= va / uAspect; else t.x *= uAspect / va;',
@@ -77,8 +64,7 @@
     '  vec2 grad = vec2(lx - lum, ly - lum);',
     '  float glint = smoothstep(0.006, 0.035, length(grad));',
     '  float ridge = smoothstep(0.004, 0.030, length(grad));',
-    '  float crestLight = pow(max(wave1, 0.0), 3.0) * 0.10;',
-    '  float tone = clamp(0.05 + lum * 1.05 + glint * 0.18 - ridge * 0.08 + crest * 0.16 + crestLight, 0.08, 0.96);',
+    '  float tone = clamp(0.05 + lum * 1.05 + glint * 0.18 - ridge * 0.08, 0.08, 0.96);',
     '  outTone = vec4(tone, glint, 0.0, 1.0);',
     '}'
   ].join('\n');
@@ -258,7 +244,10 @@
 
   function render() {
     if (!state.ready) return;
-    videoCtx.drawImage(image, 0, 0, videoCanvas.width, videoCanvas.height);
+    var frame = Math.floor(state.time * 8) % 24;
+    var sx = (frame % 6) * 1280;
+    var sy = Math.floor(frame / 6) * 720;
+    videoCtx.drawImage(image, sx, sy, 1280, 720, 0, 0, videoCanvas.width, videoCanvas.height);
     gl.bindTexture(gl.TEXTURE_2D, videoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoCanvas);
 
