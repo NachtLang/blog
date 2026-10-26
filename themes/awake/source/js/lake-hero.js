@@ -305,8 +305,6 @@
 
   image.addEventListener('load', markReady);
   image.addEventListener('error', useFallback);
-  var imageSrc = image.getAttribute('data-src');
-  if (imageSrc) window.setTimeout(function () { image.src = imageSrc; }, 300);
   if (image.naturalWidth) {
     markReady();
   } else {
