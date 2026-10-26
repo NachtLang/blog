@@ -3311,7 +3311,7 @@ body.menu-open .menu-toggle span:last-child {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: var(--paper);
+  background: var(--paper) url('/images/water-poster.jpg') center/cover;
 }
 
 .lake-stage__canvas {
@@ -3748,7 +3748,7 @@ body.page-home .nav:not(.is-scrolled) .brand {
 /* 正文使用上图东观体 */
 @font-face {
   font-family: 'ShangTuDongGuan';
-  src: url('/fonts/dongguan.woff2') format('woff2');
+  src: url('/fonts/dongguan-site.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -6022,5 +6022,5 @@ body:not(.page-home) .main {
   }
 }
 
-.lake-stage.is-fallback{background:url('/images/water-fallback.jpg') center/cover;}
+.lake-stage.is-fallback{background:url('/images/water-poster.jpg') center/cover;}
 .lake-stage.is-fallback::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(242,236,220,.42) 0 1.6px,transparent 2.1px) 0 0/7.2px 7.2px;mix-blend-mode:screen;}

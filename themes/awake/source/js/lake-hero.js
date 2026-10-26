@@ -303,6 +303,7 @@
     if (fallbackTimer) window.clearTimeout(fallbackTimer);
     if (imagePoll) window.clearInterval(imagePoll);
     state.ready = true;
+    stage.classList.remove('is-fallback');
     render();
   }
 
