@@ -287,17 +287,21 @@
   }
 
   var fallbackTimer = null;
+  var imagePoll = null;
 
   function useFallback() {
     if (stage.classList.contains('is-fallback')) return;
     if (fallbackTimer) window.clearTimeout(fallbackTimer);
+    if (imagePoll) window.clearInterval(imagePoll);
     stage.classList.add('is-fallback');
     stage.classList.remove('is-ready');
   }
 
   function markReady() {
     if (state.ready) return;
+    if (!image.naturalWidth) return;
     if (fallbackTimer) window.clearTimeout(fallbackTimer);
+    if (imagePoll) window.clearInterval(imagePoll);
     state.ready = true;
     render();
   }
@@ -307,10 +311,16 @@
   }, 5000);
 
   image.addEventListener('error', useFallback);
-  if (image.complete && image.naturalWidth) {
+  if (image.naturalWidth) {
     markReady();
   } else {
     image.addEventListener('load', markReady);
+    if (image.decode) {
+      image.decode().then(markReady).catch(function () {});
+    }
+    imagePoll = window.setInterval(function () {
+      if (image.naturalWidth) markReady();
+    }, 100);
   }
 
   document.addEventListener('visibilitychange', function () {
