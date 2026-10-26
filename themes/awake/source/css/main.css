@@ -13,12 +13,12 @@
   --ink-2: #33494a;
   --ink-3: #6c8080;
 
-  --sea: #041f24;
-  --sea-2: #072a31;
-  --sea-3: #0c3c45;
-  --sea-4: #11525b;
-  --aqua: #7cc9c3;
-  --aqua-2: #b9e8e2;
+  --sea: #072a2b;
+  --sea-2: #0d3a3a;
+  --sea-3: #1a5c58;
+  --sea-4: #2f7a75;
+  --aqua: #8bd5c9;
+  --aqua-2: #c9f0e5;
   --cream: #f2ecdc;
   --cream-soft: rgba(242, 236, 220, 0.7);
 
@@ -248,7 +248,7 @@ textarea {
 .brand__mark {
   width: 20px;
   height: 20px;
-  color: var(--aqua);
+  color: var(--sea-4);
   transition: transform 0.7s var(--ease);
 }
 
@@ -257,7 +257,7 @@ textarea {
 }
 
 .brand:hover .brand__mark {
-  transform: rotate(90deg);
+  transform: translateX(2px);
 }
 
 .brand__name {
@@ -3311,7 +3311,7 @@ body.menu-open .menu-toggle span:last-child {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: var(--paper) url('/images/water-poster-mobile.jpg') center/cover;
+  background: var(--paper) url('/images/water-poster-mobile-sea.jpg') center/cover;
 }
 
 .lake-stage__canvas {
@@ -6012,4 +6012,4 @@ body:not(.page-home) .main {
 
 
 
-@media (min-width:721px){.lake-stage{background:var(--paper) url('/images/water-poster-desktop.jpg') center/cover;}}
+@media (min-width:721px){.lake-stage{background:var(--paper) url('/images/water-poster-desktop-sea.jpg') center/cover;}}

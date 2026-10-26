@@ -7,3 +7,6 @@ source/_data/caches/
 *.bak
 screenshots/
 source/music/audio/
+
+.vercel
+.env*

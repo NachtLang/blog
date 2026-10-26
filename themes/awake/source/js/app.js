@@ -134,7 +134,7 @@
     '  float tone = s.r;',
     '  float glint = s.g;',
     '  vec3 paper = vec3(0.992, 0.988, 0.902);',
-    '  vec3 tealInk = vec3(0.070, 0.255, 0.265);',
+    '  vec3 tealInk = vec3(0.176, 0.451, 0.439);',
     '  float cell = 7.2 * uDpr;',
     '  float ang = 0.42;',
     '  mat2 rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));',
