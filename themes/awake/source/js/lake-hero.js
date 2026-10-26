@@ -7,8 +7,8 @@
 
   var stage = document.querySelector('[data-lake-stage]');
   var canvas = document.querySelector('[data-lake-canvas]');
-  var video = document.querySelector('[data-lake-video]');
-  if (!stage || !canvas || !video) return;
+  var image = document.querySelector('[data-lake-image]');
+  if (!stage || !canvas || !image) return;
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var gl = null;
@@ -244,7 +244,7 @@
 
   function render() {
     if (!state.ready) return;
-    videoCtx.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
+    videoCtx.drawImage(image, 0, 0, videoCanvas.width, videoCanvas.height);
     gl.bindTexture(gl.TEXTURE_2D, videoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoCanvas);
 
@@ -293,56 +293,34 @@
     if (fallbackTimer) window.clearTimeout(fallbackTimer);
     stage.classList.add('is-fallback');
     stage.classList.remove('is-ready');
-    video.pause();
   }
 
-  function play() {
-    if (video.paused) {
-      var promise = video.play();
-      if (promise && promise.catch) promise.catch(function () { useFallback(); });
-    }
-  }
-
-  video.muted = true;
-  video.loop = true;
-  video.playbackRate = 1.55;
-  video.addEventListener('error', useFallback);
-
-  video.addEventListener('loadeddata', function () {
+  function markReady() {
+    if (state.ready) return;
     if (fallbackTimer) window.clearTimeout(fallbackTimer);
     state.ready = true;
-    if (reduceMotion) {
-      video.pause();
-      video.currentTime = 2;
-      state.time = 2;
-      var wait = window.setInterval(function () {
-        if (video.readyState >= 2) {
-          window.clearInterval(wait);
-          render();
-        }
-      }, 120);
-    } else {
-      play();
-    }
-  });
+    render();
+  }
+
   fallbackTimer = window.setTimeout(function () {
     if (!state.ready) useFallback();
-  }, 4500);
+  }, 5000);
 
-  play();
+  image.addEventListener('error', useFallback);
+  if (image.complete && image.naturalWidth) {
+    markReady();
+  } else {
+    image.addEventListener('load', markReady);
+  }
 
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) video.pause();
-    else if (!reduceMotion && state.visible) play();
+    if (!document.hidden && !reduceMotion) render();
   });
 
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         state.visible = entry.isIntersecting;
-        if (reduceMotion) return;
-        if (entry.isIntersecting) play();
-        else video.pause();
       });
     }, { rootMargin: '80px' }).observe(stage);
   }
