@@ -312,6 +312,8 @@
   }, 5000);
 
   image.addEventListener('error', useFallback);
+  var imageSrc = image.getAttribute('data-src');
+  if (imageSrc) window.setTimeout(function () { image.src = imageSrc; }, 350);
   if (image.naturalWidth) {
     markReady();
   } else {

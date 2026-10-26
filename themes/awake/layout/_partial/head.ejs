@@ -43,5 +43,10 @@
 <link rel="icon" href="<%= url_for('/images/favicon.svg') %>" type="image/svg+xml">
 <link rel="preload" as="image" href="<%= url_for('/images/water-poster.jpg') %>" fetchpriority="high">
 <link rel="stylesheet" href="<%= url_for('/css/main.css') %>?v=<%= theme.version %>">
+<% if (is_home()) { %>
+<script>document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){var l=document.createElement('link');l.rel='stylesheet';l.href='<%= url_for('/css/font-dongguan.css') %>?v=<%= theme.version %>';document.head.appendChild(l);},900);});</script>
+<% } else { %>
+<link rel="stylesheet" href="<%= url_for('/css/font-dongguan.css') %>?v=<%= theme.version %>">
+<% } %>
 <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important}.cursor-glow{display:none}.water-canvas{display:none}</style></noscript>
 <%- meta_generator() %>

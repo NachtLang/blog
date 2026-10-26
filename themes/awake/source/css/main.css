@@ -3746,14 +3746,6 @@ body.page-home .nav:not(.is-scrolled) .brand {
 
 
 /* 正文使用上图东观体 */
-@font-face {
-  font-family: 'ShangTuDongGuan';
-  src: url('/fonts/dongguan-site.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 .post-content,
 .post-content p,
 .post-content li,
